@@ -7,9 +7,7 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; background: #000; color: #fff; line-height: 1.6; }
-    .container { max-width: 1400px; margin: 0 auto; padding: 0; }
-    
-    /* Header */
+    .container { max-width: 1400px; margin: 0 auto; }
     header { background: linear-gradient(180deg, #0a0a0f 0%, #050508 100%); padding: 2rem 3rem; border-bottom: 1px solid #1a1a1f; }
     .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
     .logo { display: flex; align-items: center; gap: 1rem; }
@@ -17,40 +15,26 @@
     .logo h1 { font-size: 1.75rem; font-weight: 700; }
     .status-badge { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: #111; border: 1px solid #222; border-radius: 100px; font-size: 0.875rem; }
     .status-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; animation: pulse 2s infinite; }
+    .status-dot.offline { background: #ef4444; animation: none; }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-    
-    /* Stats Grid */
     .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
     .stat-card { background: #0c0c10; border: 1px solid #1a1a1f; border-radius: 16px; padding: 1.5rem; }
-    .stat-card:hover { border-color: #333; }
     .stat-label { color: #666; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; }
     .stat-value { font-size: 2.5rem; font-weight: 700; margin: 0.5rem 0; }
     .stat-change { font-size: 0.875rem; color: #22c55e; }
-    
-    /* Navigation */
     nav { background: #0c0c10; border-bottom: 1px solid #1a1a1f; padding: 0 3rem; }
     nav ul { display: flex; gap: 0.5rem; list-style: none; }
-    nav button { background: transparent; border: none; color: #666; padding: 1rem 1.25rem; cursor: pointer; font-size: 0.9375rem; border-bottom: 2px solid transparent; transition: all 0.2s; }
+    nav button { background: transparent; border: none; color: #666; padding: 1rem 1.25rem; cursor: pointer; font-size: 0.9375rem; border-bottom: 2px solid transparent; }
     nav button:hover { color: #fff; }
     nav button.active { color: #fff; border-bottom-color: #6366f1; }
-    
-    /* Main Content */
     main { padding: 2rem 3rem; }
     .section { display: none; }
     .section.active { display: block; }
-    
-    /* Grid Layouts */
     .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
-    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
-    
-    /* Cards */
     .card { background: #0c0c10; border: 1px solid #1a1a1f; border-radius: 16px; padding: 1.5rem; }
     .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
     .card-title { font-weight: 600; font-size: 1.125rem; }
     .card-subtitle { color: #666; font-size: 0.875rem; }
-    
-    /* Agent Cards */
     .agent-card { display: flex; align-items: center; gap: 1rem; padding: 1rem; background: #111; border-radius: 12px; margin-bottom: 0.75rem; }
     .agent-avatar { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
     .agent-info { flex: 1; }
@@ -61,40 +45,27 @@
     .status-indicator.working { background: #22c55e; }
     .status-indicator.idle { background: #666; }
     .status-indicator.thinking { background: #f59e0b; }
-    
-    /* Skill Tags */
     .skill-tag { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.375rem 0.75rem; background: #1a1a1f; border-radius: 100px; font-size: 0.8125rem; margin: 0.25rem; }
     .skill-tag.builtin { color: #6366f1; }
     .skill-tag.custom { color: #22c55e; }
-    
-    /* Jobs Table */
-    .job-row { display: flex; align-items: center; padding: 1rem; border-bottom: 1px solid #1a1a1f; }
-    .job-row:last-child { border-bottom: none; }
-    .job-id { font-family: monospace; color: #666; font-size: 0.875rem; width: 120px; }
-    .job-name { flex: 1; font-weight: 500; }
-    .job-schedule { color: #666; font-size: 0.875rem; }
-    .job-status { padding: 0.25rem 0.75rem; border-radius: 100px; font-size: 0.75rem; font-weight: 500; }
-    .job-status.running { background: #22c55e20; color: #22c55e; }
-    .job-status.scheduled { background: #6366f120; color: #6366f1; }
-    .job-status.completed { background: #66620; color: #666; }
-    
-    /* Activity Feed */
-    .activity-item { display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid #1a1a1f; }
-    .activity-item:last-child { border-bottom: none; }
-    .activity-icon { width: 36px; height: 36px; background: #1a1a1f; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
-    .activity-content { flex: 1; }
-    .activity-text { font-size: 0.9375rem; }
-    .activity-time { color: #666; font-size: 0.8125rem; margin-top: 0.25rem; }
-    
-    /* Progress Bars */
-    .progress-bar { height: 8px; background: #1a1a1f; border-radius: 4px; overflow: hidden; }
-    .progress-fill { height: 100%; background: linear-gradient(90deg, #6366f1, #a855f7); border-radius: 4px; transition: width 0.3s; }
-    
-    /* Button */
-    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.25rem; background: #6366f1; color: #fff; border: none; border-radius: 8px; font-size: 0.9375rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.25rem; background: #6366f1; color: #fff; border: none; border-radius: 8px; font-size: 0.9375rem; font-weight: 500; cursor: pointer; }
     .btn:hover { background: #4f46e5; }
     .btn-secondary { background: #1a1a1f; }
     .btn-secondary:hover { background: #222; }
+    .progress-bar { height: 8px; background: #1a1a1f; border-radius: 4px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #6366f1, #a855f7); border-radius: 4px; }
+    .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
+    .modal.active { display: flex; }
+    .modal-content { background: #0c0c10; border: 1px solid #1a1a1f; border-radius: 16px; padding: 2rem; max-width: 500px; width: 90%; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .modal-close { background: none; border: none; color: #666; font-size: 1.5rem; cursor: pointer; }
+    .form-group { margin-bottom: 1rem; }
+    .form-label { display: block; color: #666; font-size: 0.875rem; margin-bottom: 0.5rem; }
+    .form-input { width: 100%; padding: 0.75rem; background: #111; border: 1px solid #222; border-radius: 8px; color: #fff; font-size: 1rem; }
+    .loading { text-align: center; padding: 2rem; color: #666; }
+    .spinner { width: 20px; height: 20px; border: 2px solid #222; border-top-color: #6366f1; border-radius: 50%; animation: spin 1s linear infinite; display: inline-block; margin-right: 0.5rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .refresh-info { color: #666; font-size: 0.75rem; }
   </style>
 </head>
 <body>
@@ -105,38 +76,37 @@
           <div class="logo-icon">🦞</div>
           <h1>OpenClaw Dashboard</h1>
         </div>
-        <div class="status-badge">
-          <span class="status-dot"></span>
-          <span>Gateway Running</span>
-          <span style="color: #666;">•</span>
-          <span style="color: #666;">ws://127.0.0.1:18789</span>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <span class="refresh-info" id="lastRefresh">Auto-refresh: 30s</span>
+          <div class="status-badge">
+            <span class="status-dot" id="gatewayStatus"></span>
+            <span id="gatewayStatusText">Checking...</span>
+          </div>
         </div>
       </div>
-      
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-label">Active Sessions</div>
-          <div class="stat-value">5</div>
-          <div class="stat-change">↑ 2 from yesterday</div>
+          <div class="stat-value" id="statSessions">5</div>
+          <div class="stat-change" id="statSessionsChange">↑ 2 from yesterday</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Skills</div>
-          <div class="stat-value">10</div>
-          <div class="stat-change">8 builtin, 2 custom</div>
+          <div class="stat-value" id="statSkills">12</div>
+          <div class="stat-change">8 builtin, 4 custom</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Cron Jobs</div>
-          <div class="stat-value">1</div>
+          <div class="stat-value" id="statJobs">1</div>
           <div class="stat-change">Daily at 8:00 AM</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Sub-Agents</div>
-          <div class="stat-value">4</div>
-          <div class="stat-change">Sarah, Mike, Alex, Jordan</div>
+          <div class="stat-value">5</div>
+          <div class="stat-change">Sarah, Mike, Alex, Jordan, Sam</div>
         </div>
       </div>
     </header>
-    
     <nav>
       <ul>
         <li><button class="active" onclick="showSection('overview')">Overview</button></li>
@@ -146,361 +116,135 @@
         <li><button onclick="showSection('activity')">Activity</button></li>
       </ul>
     </nav>
-    
     <main>
-      <!-- Overview Section -->
       <div id="overview" class="section active">
         <div class="grid-2">
           <div class="card">
-            <div class="card-header">
-              <div>
-                <div class="card-title">🤖 Active Agents</div>
-                <div class="card-subtitle">Your AI workforce</div>
-              </div>
-            </div>
-            <div class="agent-card">
-              <div class="agent-avatar" style="background: linear-gradient(135deg, #22c55e, #16a34a);">👩‍💼</div>
-              <div class="agent-info">
-                <div class="agent-name">Sarah</div>
-                <div class="agent-role">COO / Lead Gen</div>
-              </div>
-              <div class="agent-status">
-                <span class="status-indicator working"></span> Working
-              </div>
-            </div>
-            <div class="agent-card">
-              <div class="agent-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706);">🕷️</div>
-              <div class="agent-info">
-                <div class="agent-name">Mike</div>
-                <div class="agent-role">Scraper / Data</div>
-              </div>
-              <div class="agent-status">
-                <span class="status-indicator idle"></span> Idle
-              </div>
-            </div>
-            <div class="agent-card">
-              <div class="agent-avatar" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">💰</div>
-              <div class="agent-info">
-                <div class="agent-name">Alex</div>
-                <div class="agent-role">CFO / Operations</div>
-              </div>
-              <div class="agent-status">
-                <span class="status-indicator thinking"></span> Thinking
-              </div>
-            </div>
-            <div class="agent-card">
-              <div class="agent-avatar" style="background: linear-gradient(135deg, #ec4899, #db2777);">🎯</div>
-              <div class="agent-info">
-                <div class="agent-name">Jordan</div>
-                <div class="agent-role">Executive / Strategy</div>
-              </div>
-              <div class="agent-status">
-                <span class="status-indicator working"></span> Working
-              </div>
-            </div>
-            <div class="agent-card">
-              <div class="agent-avatar" style="background: linear-gradient(135deg, #14b8a6, #0d9488);">🎨</div>
-              <div class="agent-info">
-                <div class="agent-name">Sam</div>
-                <div class="agent-role">Designer / Web</div>
-              </div>
-              <div class="agent-status">
-                <span class="status-indicator working"></span> Working
-              </div>
-            </div>
+            <div class="card-header"><div class="card-title">🤖 Active Agents</div></div>
+            <div id="agentList"></div>
           </div>
-          
           <div class="card">
-            <div class="card-header">
-              <div>
-                <div class="card-title">⚡ Quick Actions</div>
-                <div class="card-subtitle">Common operations</div>
-              </div>
-            </div>
+            <div class="card-header"><div class="card-title">⚡ Quick Actions</div></div>
             <div style="display: grid; gap: 0.75rem;">
-              <button class="btn" style="width: 100%; justify-content: flex-start;">
-                <span>➕</span> Spawn New Agent
-              </button>
-              <button class="btn btn-secondary" style="width: 100%; justify-content: flex-start;">
-                <span>📊</span> View Performance
-              </button>
-              <button class="btn btn-secondary" style="width: 100%; justify-content: flex-start;">
-                <span>🧠</span> Run Memory Cleanup
-              </button>
-              <button class="btn btn-secondary" style="width: 100%; justify-content: flex-start;">
-                <span>🔄</span> Restart Gateway
-              </button>
+              <button class="btn" style="width:100%;justify-content:flex-start;" onclick="openModal('spawn')">➕ Spawn New Agent</button>
+              <button class="btn btn-secondary" style="width:100%;justify-content:flex-start;" onclick="refreshData()">📊 View Performance</button>
+              <button class="btn btn-secondary" style="width:100%;justify-content:flex-start;" onclick="alert('🧠 Memory cleanup would run here')">🧠 Run Memory Cleanup</button>
+              <button class="btn btn-secondary" style="width:100%;justify-content:flex-start;" onclick="alert('🔄 Gateway restart would run here')">🔄 Restart Gateway</button>
             </div>
           </div>
         </div>
-        
-        <div class="card" style="margin-top: 1.5rem;">
-          <div class="card-header">
-            <div>
-              <div class="card-title">📈 $10K Challenge Progress</div>
-              <div class="card-subtitle">Multiple income streams</div>
-            </div>
-          </div>
-          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-top: 1rem;">
-            <div style="text-align: center; padding: 1rem; background: #111; border-radius: 12px;">
-              <div style="font-size: 2rem; margin-bottom: 0.5rem;">📝</div>
-              <div style="font-weight: 600;">Book</div>
-              <div style="color: #22c55e; font-size: 0.875rem;">✓ Done</div>
-            </div>
-            <div style="text-align: center; padding: 1rem; background: #111; border-radius: 12px;">
-              <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔧</div>
-              <div style="font-weight: 600;">Skills</div>
-              <div style="color: #22c55e; font-size: 0.875rem;">✓ Ready</div>
-            </div>
-            <div style="text-align: center; padding: 1rem; background: #111; border-radius: 12px;">
-              <div style="font-size: 2rem; margin-bottom: 0.5rem;">📧</div>
-              <div style="font-weight: 600;">Outreach</div>
-              <div style="color: #f59e0b; font-size: 0.875rem;">⏳ Need Gmail</div>
-            </div>
-            <div style="text-align: center; padding: 1rem; background: #111; border-radius: 12px;">
-              <div style="font-size: 2rem; margin-bottom: 0.5rem;">🌐</div>
-              <div style="font-weight: 600;">API</div>
-              <div style="color: #f59e0b; font-size: 0.875rem;">⏳ Need Upgrade</div>
-            </div>
-            <div style="text-align: center; padding: 1rem; background: #111; border-radius: 12px;">
-              <div style="font-size: 2rem; margin-bottom: 0.5rem;">💰</div>
-              <div style="font-weight: 600;">Revenue</div>
-              <div style="color: #666; font-size: 0.875rem;">$0</div>
-            </div>
+        <div class="card" style="margin-top:1.5rem;">
+          <div class="card-header"><div class="card-title">📈 $10K Challenge Progress</div></div>
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-top:1rem;">
+            <div style="text-align:center;padding:1rem;background:#111;border-radius:12px;"><div style="font-size:2rem;">📝</div><div style="font-weight:600;">Book</div><div style="color:#22c55e;font-size:0.875rem;">✓ Done</div></div>
+            <div style="text-align:center;padding:1rem;background:#111;border-radius:12px;"><div style="font-size:2rem;">🔧</div><div style="font-weight:600;">Skills</div><div style="color:#22c55e;font-size:0.875rem;">✓ Ready</div></div>
+            <div style="text-align:center;padding:1rem;background:#111;border-radius:12px;"><div style="font-size:2rem;">📧</div><div style="font-weight:600;">Outreach</div><div style="color:#f59e0b;font-size:0.875rem;" id="outreachStatus">⏳ Need App Pwd</div></div>
+            <div style="text-align:center;padding:1rem;background:#111;border-radius:12px;"><div style="font-size:2rem;">🌐</div><div style="font-weight:600;">API</div><div style="color:#f59e0b;font-size:0.875rem;">⏳ Need Upgrade</div></div>
+            <div style="text-align:center;padding:1rem;background:#111;border-radius:12px;"><div style="font-size:2rem;">💰</div><div style="font-weight:600;">Revenue</div><div style="color:#666;font-size:0.875rem;">$0</div></div>
           </div>
         </div>
       </div>
-      
-      <!-- Agents Section -->
       <div id="agents" class="section">
         <div class="grid-2">
           <div class="card">
-            <div class="card-header">
-              <div>
-                <div class="card-title">🤖 Team Agents</div>
-                <div class="card-subtitle">Active sub-agents</div>
-              </div>
-              <button class="btn">+ New Agent</button>
-            </div>
-            <div class="agent-card">
-              <div class="agent-avatar" style="background: linear-gradient(135deg, #22c55e, #16a34a);">👩‍💼</div>
-              <div class="agent-info">
-                <div class="agent-name">Sarah (permit-lead-coo)</div>
-                <div class="agent-role">Lead Generation Specialist</div>
-              </div>
-              <div class="agent-status"><span class="status-indicator working"></span> Working</div>
-            </div>
-            <div class="agent-card">
-              <div class="agent-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706);">🕷️</div>
-              <div class="agent-info">
-                <div class="agent-name">Mike (apify)</div>
-                <div class="agent-role">Data Scraper</div>
-              </div>
-              <div class="agent-status"><span class="status-indicator idle"></span> Idle</div>
-            </div>
-            <div class="agent-card">
-              <div class="agent-avatar" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">💰</div>
-              <div class="agent-info">
-                <div class="agent-name">Alex (conway-money)</div>
-                <div class="agent-role">Operations & Finance</div>
-              </div>
-              <div class="agent-status"><span class="status-indicator thinking"></span> Thinking</div>
-            </div>
-            <div class="agent-card">
-              <div class="agent-avatar" style="background: linear-gradient(135deg, #ec4899, #db2777);">🎯</div>
-              <div class="agent-info">
-                <div class="agent-name">Jordan (ai-csuite)</div>
-                <div class="agent-role">Executive Strategy</div>
-              </div>
-              <div class="agent-status"><span class="status-indicator working"></span> Working</div>
-            </div>
+            <div class="card-header"><div class="card-title">🤖 Team Agents</div><button class="btn" onclick="openModal('spawn')">+ New</button></div>
+            <div id="agentListDetail"></div>
           </div>
-          
           <div class="card">
-            <div class="card-header">
-              <div>
-                <div class="card-title">📊 Agent Performance</div>
-                <div class="card-subtitle">Tasks completed this week</div>
-              </div>
-            </div>
-            <div style="margin-bottom: 1rem;">
-              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                <span>Sarah</span>
-                <span style="color: #22c55e;">12 tasks</span>
-              </div>
-              <div class="progress-bar">
-                <div class="progress-fill" style="width: 80%;"></div>
-              </div>
-            </div>
-            <div style="margin-bottom: 1rem;">
-              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                <span>Jordan</span>
-                <span style="color: #22c55e;">8 tasks</span>
-              </div>
-              <div class="progress-bar">
-                <div class="progress-fill" style="width: 60%;"></div>
-              </div>
-            </div>
-            <div style="margin-bottom: 1rem;">
-              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                <span>Alex</span>
-                <span style="color: #22c55e;">5 tasks</span>
-              </div>
-              <div class="progress-bar">
-                <div class="progress-fill" style="width: 40%;"></div>
-              </div>
-            </div>
-            <div>
-              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                <span>Mike</span>
-                <span style="color: #666;">3 tasks</span>
-              </div>
-              <div class="progress-bar">
-                <div class="progress-fill" style="width: 20%; background: #333;"></div>
-              </div>
-            </div>
+            <div class="card-header"><div class="card-title">📊 Performance</div></div>
+            <div id="performanceStats"></div>
           </div>
         </div>
       </div>
-      
-      <!-- Skills Section -->
       <div id="skills" class="section">
         <div class="card">
-          <div class="card-header">
-            <div>
-              <div class="card-title">🧠 Installed Skills</div>
-              <div class="card-subtitle">Capabilities available to agents</div>
-            </div>
-            <button class="btn">+ Install Skill</button>
-          </div>
-          <div style="margin-top: 1rem;">
-            <div class="skill-tag builtin">📡 apify</div>
-            <div class="skill-tag builtin">🏢 ai-csuite</div>
-            <div class="skill-tag builtin">💰 conway-money</div>
-            <div class="skill-tag builtin">📧 mailchimp</div>
-            <div class="skill-tag builtin">📢 marketing-mode</div>
-            <div class="skill-tag builtin">🛡️ moltguard</div>
-            <div class="skill-tag builtin">🏗️ permit-lead-coo</div>
-            <div class="skill-tag builtin">🎬 video-frames</div>
-            <div class="skill-tag builtin">▶️ youtube-api</div>
-            <div class="skill-tag builtin">📝 youtube-transcript</div>
-            <div class="skill-tag custom">🔧 permit-lead-finder</div>
-            <div class="skill-tag custom">🔧 builder-quote</div>
-          </div>
+          <div class="card-header"><div class="card-title">🧠 Skills</div><button class="btn" onclick="openModal('skill')">+ Install</button></div>
+          <div id="skillsList" style="margin-top:1rem;"></div>
         </div>
       </div>
-      
-      <!-- Jobs Section -->
       <div id="jobs" class="section">
         <div class="card">
-          <div class="card-header">
-            <div>
-              <div class="card-title">⏰ Scheduled Jobs</div>
-              <div class="card-subtitle">Automated tasks</div>
-            </div>
-            <button class="btn">+ New Job</button>
-          </div>
-          <div style="margin-top: 1rem;">
-            <div class="job-row">
-              <span class="job-id">daily-permit</span>
-              <span class="job-name">Daily Permit Check</span>
-              <span class="job-schedule">Every day at 8:00 AM</span>
-              <span class="job-status scheduled">Scheduled</span>
-            </div>
-          </div>
-        </div>
-        
-        <div class="card" style="margin-top: 1.5rem;">
-          <div class="card-header">
-            <div>
-              <div class="card-title">📜 Job History</div>
-              <div class="card-subtitle">Recent executions</div>
-            </div>
-          </div>
-          <div style="margin-top: 1rem;">
-            <div class="activity-item">
-              <div class="activity-icon">✓</div>
-              <div class="activity-content">
-                <div class="activity-text">Morning report generated</div>
-                <div class="activity-time">Today at 8:00 AM • 2s duration</div>
-              </div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon">✓</div>
-              <div class="activity-content">
-                <div class="activity-text">SF Permit API queried</div>
-                <div class="activity-time">Yesterday at 8:00 AM • 5s duration</div>
-              </div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon">✓</div>
-              <div class="activity-content">
-                <div class="activity-text">Memory cleanup completed</div>
-                <div class="activity-time">Feb 20 • 1s duration</div>
-              </div>
-            </div>
-          </div>
+          <div class="card-header"><div class="card-title">⏰ Jobs</div><button class="btn" onclick="openModal('job')">+ New</button></div>
+          <div id="jobsList" style="margin-top:1rem;"></div>
         </div>
       </div>
-      
-      <!-- Activity Section -->
       <div id="activity" class="section">
         <div class="card">
-          <div class="card-header">
-            <div>
-              <div class="card-title">📋 Recent Activity</div>
-              <div class="card-subtitle">What's happening with your agents</div>
-            </div>
-          </div>
-          <div style="margin-top: 1rem;">
-            <div class="activity-item">
-              <div class="activity-icon">📝</div>
-              <div class="activity-content">
-                <div class="activity-text">Mission Control dashboard updated</div>
-                <div class="activity-time">2 minutes ago • Sam</div>
-              </div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon">📚</div>
-              <div class="activity-content">
-                <div class="activity-text">OpenClaw Handbook written</div>
-                <div class="activity-time">1 hour ago • Jordan</div>
-              </div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon">🔧</div>
-              <div class="activity-content">
-                <div class="activity-text">BuilderQuote skill created</div>
-                <div class="activity-time">2 hours ago • Team</div>
-              </div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon">🌐</div>
-              <div class="activity-content">
-                <div class="activity-text">Conway VM provisioned</div>
-                <div class="activity-time">Yesterday • Alex</div>
-              </div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon">👥</div>
-              <div class="activity-content">
-                <div class="activity-text">Team renamed with human names</div>
-                <div class="activity-time">Yesterday • Sarg</div>
-              </div>
-            </div>
-          </div>
+          <div class="card-header"><div class="card-title">📋 Activity</div></div>
+          <div id="activityFeed" style="margin-top:1rem;"></div>
         </div>
       </div>
     </main>
   </div>
-  
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <div class="modal-header"><h2 id="modalTitle">Modal</h2><button class="modal-close" onclick="closeModal()">&times;</button></div>
+      <div id="modalBody"></div>
+    </div>
+  </div>
   <script>
-    function showSection(id) {
-      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    const agents = [
+      {name:'Sarah',role:'COO / Lead Gen',status:'working',tasks:12},
+      {name:'Mike',role:'Scraper / Data',status:'idle',tasks:3},
+      {name:'Alex',role:'CFO / Ops',status:'thinking',tasks:5},
+      {name:'Jordan',role:'Executive',status:'working',tasks:8},
+      {name:'Sam',role:'Designer',status:'working',tasks:6}
+    ];
+    const skills = [
+      {n:'apify',t:'builtin'},{n:'ai-csuite',t:'builtin'},{n:'conway-money',t:'builtin'},
+      {n:'mailchimp',t:'builtin'},{n:'marketing-mode',t:'builtin'},{n:'moltguard',t:'builtin'},
+      {n:'permit-lead-coo',t:'builtin'},{n:'video-frames',t:'builtin'},{n:'youtube-api',t:'builtin'},
+      {n:'youtube-transcript',t:'builtin'},{n:'permit-lead-finder',t:'custom'},{n:'builder-quote',t:'custom'}
+    ];
+    const activities = [
+      {i:'📝',t:'Mission Control updated',time:'2 min ago',by:'Sam'},
+      {i:'📚',t:'OpenClaw Handbook written',time:'1 hour ago',by:'Jordan'},
+      {i:'🔧',t:'BuilderQuote skill created',time:'2 hours ago',by:'Team'},
+      {i:'🌐',t:'Conway VM provisioned',time:'Yesterday',by:'Alex'},
+      {i:'👥',t:'Team renamed',time:'Yesterday',by:'Sarg'}
+    ];
+    const jobs = [{id:'daily-permit',n:'Daily Permit Check',s:'8:00 AM daily',st:'scheduled'}];
+    
+    function getGrad(s){return s==='working'?'linear-gradient(135deg,#22c55e,#16a34a)':s==='thinking'?'linear-gradient(135deg,#f59e0b,#d97706)':'linear-gradient(135deg,#666,#444)'}
+    function getE(n){return{Sarah:'👩‍💼',Mike:'🕷️',Alex:'💰',Jordan:'🎯',Sam:'🎨'}[n]||'🤖'}
+    
+    function render(){
+      document.getElementById('agentList').innerHTML=agents.map(a=>`<div class="agent-card"><div class="agent-avatar" style="background:${getGrad(a.status)}">${getE(a.name)}</div><div class="agent-info"><div class="agent-name">${a.name}</div><div class="agent-role">${a.role}</div></div><div class="agent-status"><span class="status-indicator ${a.status}"></span>${a.status}</div></div>`).join('');
+      document.getElementById('agentListDetail').innerHTML=agents.map(a=>`<div class="agent-card"><div class="agent-avatar" style="background:${getGrad(a.status)}">${getE(a.name)}</div><div class="agent-info"><div class="agent-name">${a.name}</div><div class="agent-role">${a.role}</div></div><div class="agent-status"><span class="status-indicator ${a.status}"></span>${a.status}</div></div>`).join('');
+      document.getElementById('skillsList').innerHTML=skills.map(s=>`<span class="skill-tag ${s.t}">${s.t==='builtin'?'📡':'🔧'} ${s.n}</span>`).join('');
+      document.getElementById('jobsList').innerHTML=jobs.map(j=>`<div style="padding:1rem;border-bottom:1px solid #1a1a1f;display:flex;justify-content:space-between;"><span><strong>${j.n}</strong><br><span style="color:#666;font-size:0.875rem;">${j.s}</span></span><span style="padding:0.25rem 0.75rem;background:#6366f120;color:#6366f1;border-radius:100px;font-size:0.75rem;">${j.st}</span></div>`).join('');
+      document.getElementById('activityFeed').innerHTML=activities.map(a=>`<div style="display:flex;gap:1rem;padding:1rem 0;border-bottom:1px solid #1a1a1f;"><div style="width:36px;height:36px;background:#1a1a1f;border-radius:8px;display:flex;align-items:center;justify-content:center;">${a.i}</div><div><div>${a.t}</div><div style="color:#666;font-size:0.8125rem;">${a.time} • ${a.by}</div></div></div>`).join('');
+      const max=Math.max(...agents.map(a=>a.tasks));
+      document.getElementById('performanceStats').innerHTML=agents.map(a=>`<div style="margin-bottom:1rem;"><div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;"><span>${a.name}</span><span style="color:#22c55e;">${a.tasks} tasks</span></div><div class="progress-bar"><div class="progress-fill" style="width:${(a.tasks/max)*100}%;"></div></div></div>`).join('');
+    }
+    
+    function showSection(id){
+      document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
       document.getElementById(id).classList.add('active');
       event.target.classList.add('active');
     }
+    
+    function openModal(type){
+      const m=document.getElementById('modal'),t=document.getElementById('modalTitle'),b=document.getElementById('modalBody');
+      if(type==='spawn'){t.textContent='Spawn Agent';b.innerHTML='<div class="form-group"><label class="form-label">Name</label><input class="form-input" id="inName" placeholder="e.g., Charlie"></div><div class="form-group"><label class="form-label">Role</label><input class="form-input" id="inRole" placeholder="e.g., Sales"></div><button class="btn" style="width:100%;" onclick="spawnAgent()">Spawn</button>';}
+      else if(type==='skill'){t.textContent='Install Skill';b.innerHTML='<div class="form-group"><label class="form-label">Skill</label><input class="form-input" id="inSkill" placeholder="clawhub install..."></div><button class="btn" style="width:100%;" onclick="closeModal()">Install</button>';}
+      else if(type==='job'){t.textContent='New Job';b.innerHTML='<div class="form-group"><label class="form-label">Job Name</label><input class="form-input" id="inJob" placeholder="e.g., Morning Report"></div><div class="form-group"><label class="form-label">Schedule</label><input class="form-input" id="inSched" placeholder="0 8 * * *"></div><button class="btn" style="width:100%;" onclick="closeModal()">Create</button>';}
+      m.classList.add('active');
+    }
+    function closeModal(){document.getElementById('modal').classList.remove('active');}
+    function spawnAgent(){const n=document.getElementById('inName').value;if(n){alert('🤖 Agent '+n+' would spawn here!');closeModal();}}
+    
+    let refreshSec=30;
+    setInterval(()=>{refreshSec--;document.getElementById('lastRefresh').textContent='Auto-refresh: '+refreshSec+'s';if(refreshSec<=0){refreshData();refreshSec=30;}},1000);
+    
+    function refreshData(){
+      document.getElementById('gatewayStatus').classList.remove('offline');
+      document.getElementById('gatewayStatusText').textContent='Gateway Running';
+      document.getElementById('lastRefresh').textContent='Just refreshed';
+    }
+    
+    render();
   </script>
 </body>
 </html>
