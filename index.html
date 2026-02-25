@@ -4,247 +4,482 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OpenClaw Dashboard | Operations Center</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; background: #000; color: #fff; line-height: 1.6; }
-    .container { max-width: 1400px; margin: 0 auto; }
-    header { background: linear-gradient(180deg, #0a0a0f 0%, #050508 100%); padding: 2rem 3rem; border-bottom: 1px solid #1a1a1f; }
-    .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-    .logo { display: flex; align-items: center; gap: 1rem; }
-    .logo-icon { width: 48px; height: 48px; background: linear-gradient(135deg, #6366f1, #a855f7); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
-    .logo h1 { font-size: 1.75rem; font-weight: 700; }
-    .status-badge { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: #111; border: 1px solid #222; border-radius: 100px; font-size: 0.875rem; }
-    .status-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; animation: pulse 2s infinite; }
-    .status-dot.offline { background: #ef4444; animation: none; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #0a0a0f; color: #fff; min-height: 100vh; }
+    .glass { background: rgba(15, 15, 20, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); }
+    .gradient-text { background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .glow { box-shadow: 0 0 40px rgba(99, 102, 241, 0.3); }
+    .pulse { animation: pulse 2s infinite; }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
-    .stat-card { background: #0c0c10; border: 1px solid #1a1a1f; border-radius: 16px; padding: 1.5rem; }
-    .stat-label { color: #666; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; }
-    .stat-value { font-size: 2.5rem; font-weight: 700; margin: 0.5rem 0; }
-    .stat-change { font-size: 0.875rem; color: #22c55e; }
-    nav { background: #0c0c10; border-bottom: 1px solid #1a1a1f; padding: 0 3rem; }
-    nav ul { display: flex; gap: 0.5rem; list-style: none; }
-    nav button { background: transparent; border: none; color: #666; padding: 1rem 1.25rem; cursor: pointer; font-size: 0.9375rem; border-bottom: 2px solid transparent; }
-    nav button:hover { color: #fff; }
-    nav button.active { color: #fff; border-bottom-color: #6366f1; }
-    main { padding: 2rem 3rem; }
-    .section { display: none; }
-    .section.active { display: block; }
-    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
-    .card { background: #0c0c10; border: 1px solid #1a1a1f; border-radius: 16px; padding: 1.5rem; }
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-    .card-title { font-weight: 600; font-size: 1.125rem; }
-    .card-subtitle { color: #666; font-size: 0.875rem; }
-    .agent-card { display: flex; align-items: center; gap: 1rem; padding: 1rem; background: #111; border-radius: 12px; margin-bottom: 0.75rem; }
-    .agent-avatar { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
-    .agent-info { flex: 1; }
-    .agent-name { font-weight: 600; }
-    .agent-role { color: #6366f1; font-size: 0.875rem; }
-    .agent-status { display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; color: #666; }
-    .status-indicator { width: 6px; height: 6px; border-radius: 50%; }
-    .status-indicator.working { background: #22c55e; }
-    .status-indicator.idle { background: #666; }
-    .status-indicator.thinking { background: #f59e0b; }
-    .skill-tag { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.375rem 0.75rem; background: #1a1a1f; border-radius: 100px; font-size: 0.8125rem; margin: 0.25rem; }
-    .skill-tag.builtin { color: #6366f1; }
-    .skill-tag.custom { color: #22c55e; }
-    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.25rem; background: #6366f1; color: #fff; border: none; border-radius: 8px; font-size: 0.9375rem; font-weight: 500; cursor: pointer; }
-    .btn:hover { background: #4f46e5; }
-    .btn-secondary { background: #1a1a1f; }
-    .btn-secondary:hover { background: #222; }
-    .progress-bar { height: 8px; background: #1a1a1f; border-radius: 4px; overflow: hidden; }
-    .progress-fill { height: 100%; background: linear-gradient(90deg, #6366f1, #a855f7); border-radius: 4px; }
-    .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
-    .modal.active { display: flex; }
-    .modal-content { background: #0c0c10; border: 1px solid #1a1a1f; border-radius: 16px; padding: 2rem; max-width: 500px; width: 90%; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-    .modal-close { background: none; border: none; color: #666; font-size: 1.5rem; cursor: pointer; }
-    .form-group { margin-bottom: 1rem; }
-    .form-label { display: block; color: #666; font-size: 0.875rem; margin-bottom: 0.5rem; }
-    .form-input { width: 100%; padding: 0.75rem; background: #111; border: 1px solid #222; border-radius: 8px; color: #fff; font-size: 1rem; }
-    .loading { text-align: center; padding: 2rem; color: #666; }
-    .spinner { width: 20px; height: 20px; border: 2px solid #222; border-top-color: #6366f1; border-radius: 50%; animation: spin 1s linear infinite; display: inline-block; margin-right: 0.5rem; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .refresh-info { color: #666; font-size: 0.75rem; }
+    .float { animation: float 3s ease-in-out infinite; }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    .scrollbar::-webkit-scrollbar { width: 6px; }
+    .scrollbar::-webkit-scrollbar-track { background: #1a1a1f; }
+    .scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
   </style>
 </head>
-<body>
-  <div class="container">
-    <header>
-      <div class="header-top">
-        <div class="logo">
-          <div class="logo-icon">🦞</div>
-          <h1>OpenClaw Dashboard</h1>
-        </div>
-        <div style="display: flex; align-items: center; gap: 1rem;">
-          <span class="refresh-info" id="lastRefresh">Auto-refresh: 30s</span>
-          <div class="status-badge">
-            <span class="status-dot" id="gatewayStatus"></span>
-            <span id="gatewayStatusText">Checking...</span>
+<body class="min-h-screen">
+  <div class="min-h-screen bg-[#0a0a0f]">
+    <!-- Header -->
+    <header class="glass sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-6 py-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-2xl shadow-lg glow">
+              🦞
+            </div>
+            <div>
+              <h1 class="text-2xl font-bold gradient-text">OpenClaw</h1>
+              <p class="text-xs text-slate-500">AI Operations Platform</p>
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-label">Active Sessions</div>
-          <div class="stat-value" id="statSessions">5</div>
-          <div class="stat-change" id="statSessionsChange">↑ 2 from yesterday</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Skills</div>
-          <div class="stat-value" id="statSkills">12</div>
-          <div class="stat-change">8 builtin, 4 custom</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Cron Jobs</div>
-          <div class="stat-value" id="statJobs">1</div>
-          <div class="stat-change">Daily at 8:00 AM</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Sub-Agents</div>
-          <div class="stat-value">5</div>
-          <div class="stat-change">Sarah, Mike, Alex, Jordan, Sam</div>
-        </div>
-      </div>
-    </header>
-    <nav>
-      <ul>
-        <li><button class="active" onclick="showSection('overview')">Overview</button></li>
-        <li><button onclick="showSection('agents')">Agents</button></li>
-        <li><button onclick="showSection('skills')">Skills</button></li>
-        <li><button onclick="showSection('jobs')">Jobs</button></li>
-        <li><button onclick="showSection('activity')">Activity</button></li>
-      </ul>
-    </nav>
-    <main>
-      <div id="overview" class="section active">
-        <div class="grid-2">
-          <div class="card">
-            <div class="card-header"><div class="card-title">🤖 Active Agents</div></div>
-            <div id="agentList"></div>
-          </div>
-          <div class="card">
-            <div class="card-header"><div class="card-title">⚡ Quick Actions</div></div>
-            <div style="display: grid; gap: 0.75rem;">
-              <button class="btn" style="width:100%;justify-content:flex-start;" onclick="openModal('spawn')">➕ Spawn New Agent</button>
-              <button class="btn btn-secondary" style="width:100%;justify-content:flex-start;" onclick="refreshData()">📊 View Performance</button>
-              <button class="btn btn-secondary" style="width:100%;justify-content:flex-start;" onclick="alert('🧠 Memory cleanup would run here')">🧠 Run Memory Cleanup</button>
-              <button class="btn btn-secondary" style="width:100%;justify-content:flex-start;" onclick="alert('🔄 Gateway restart would run here')">🔄 Restart Gateway</button>
+          
+          <div class="flex items-center gap-6">
+            <!-- Stats -->
+            <div class="flex items-center gap-8">
+              <div class="text-center">
+                <p class="text-2xl font-bold text-white" id="sessionCount">5</p>
+                <p class="text-xs text-slate-500">Sessions</p>
+              </div>
+              <div class="text-center">
+                <p class="text-2xl font-bold text-emerald-400" id="skillCount">12</p>
+                <p class="text-xs text-slate-500">Skills</p>
+              </div>
+              <div class="text-center">
+                <p class="text-2xl font-bold text-purple-400" id="jobCount">3</p>
+                <p class="text-xs text-slate-500">Jobs</p>
+              </div>
+            </div>
+            
+            <!-- Status -->
+            <div class="flex items-center gap-3 px-4 py-2 bg-emerald-500/10 border border-emerald-500/30 rounded-full">
+              <span class="w-2 h-2 bg-emerald-400 rounded-full pulse"></span>
+              <span class="text-sm text-emerald-400 font-medium">System Online</span>
             </div>
           </div>
         </div>
-        <div class="card" style="margin-top:1.5rem;">
-          <div class="card-header"><div class="card-title">📈 $10K Challenge Progress</div></div>
-          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-top:1rem;">
-            <div style="text-align:center;padding:1rem;background:#111;border-radius:12px;"><div style="font-size:2rem;">📝</div><div style="font-weight:600;">Book</div><div style="color:#22c55e;font-size:0.875rem;">✓ Done</div></div>
-            <div style="text-align:center;padding:1rem;background:#111;border-radius:12px;"><div style="font-size:2rem;">🔧</div><div style="font-weight:600;">Skills</div><div style="color:#22c55e;font-size:0.875rem;">✓ Ready</div></div>
-            <div style="text-align:center;padding:1rem;background:#111;border-radius:12px;"><div style="font-size:2rem;">📧</div><div style="font-weight:600;">Outreach</div><div style="color:#f59e0b;font-size:0.875rem;" id="outreachStatus">⏳ Need App Pwd</div></div>
-            <div style="text-align:center;padding:1rem;background:#111;border-radius:12px;"><div style="font-size:2rem;">🌐</div><div style="font-weight:600;">API</div><div style="color:#f59e0b;font-size:0.875rem;">⏳ Need Upgrade</div></div>
-            <div style="text-align:center;padding:1rem;background:#111;border-radius:12px;"><div style="font-size:2rem;">💰</div><div style="font-weight:600;">Revenue</div><div style="color:#666;font-size:0.875rem;">$0</div></div>
+      </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="glass border-t border-b border-white/5">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="flex gap-2 overflow-x-auto scrollbar">
+          <button onclick="showSection('overview')" class="nav-btn active px-6 py-4 text-sm font-medium text-white border-b-2 border-indigo-500" data-section="overview">
+            📊 Overview
+          </button>
+          <button onclick="showSection('agents')" class="nav-btn px-6 py-4 text-sm font-medium text-slate-400 hover:text-white border-b-2 border-transparent" data-section="agents">
+            🤖 Agents
+          </button>
+          <button onclick="showSection('skills')" class="nav-btn px-6 py-4 text-sm font-medium text-slate-400 hover:text-white border-b-2 border-transparent" data-section="skills">
+            💡 Skills
+          </button>
+          <button onclick="showSection('jobs')" class="nav-btn px-6 py-4 text-sm font-medium text-slate-400 hover:text-white border-b-2 border-transparent" data-section="jobs">
+            📋 Jobs
+          </button>
+          <button onclick="showSection('memory')" class="nav-btn px-6 py-4 text-sm font-medium text-slate-400 hover:text-white border-b-2 border-transparent" data-section="memory">
+            🧠 Memory
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-8">
+      <!-- Overview Section -->
+      <section id="overview" class="section">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <!-- Active Sessions Card -->
+          <div class="glass rounded-2xl p-6 card-hover">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-slate-400 text-sm">Active Sessions</span>
+              <span class="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center">📱</span>
+            </div>
+            <p class="text-4xl font-bold text-white mb-2">5</p>
+            <p class="text-xs text-emerald-400">↑ 2 from yesterday</p>
+            <div class="mt-4 flex -space-x-2">
+              <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 border-2 border-[#0a0a0f]"></div>
+              <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 border-2 border-[#0a0a0f]"></div>
+              <div class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 border-2 border-[#0a0a0f]"></div>
+              <div class="w-8 h-8 rounded-full bg-slate-600 border-2 border-[#0a0a0f] flex items-center justify-center text-xs">+2</div>
+            </div>
+          </div>
+
+          <!-- Skills Card -->
+          <div class="glass rounded-2xl p-6 card-hover">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-slate-400 text-sm">Installed Skills</span>
+              <span class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center">💡</span>
+            </div>
+            <p class="text-4xl font-bold text-white mb-2">12</p>
+            <p class="text-xs text-slate-400">8 builtin, 4 custom</p>
+            <div class="mt-4 flex gap-2 flex-wrap">
+              <span class="px-2 py-1 bg-indigo-500/20 text-indigo-400 text-xs rounded-full">github</span>
+              <span class="px-2 py-1 bg-emerald-500/20 text-emerald-400 text-xs rounded-full">web</span>
+              <span class="px-2 py-1 bg-amber-500/20 text-amber-400 text-xs rounded-full">+10</span>
+            </div>
+          </div>
+
+          <!-- Active Jobs Card -->
+          <div class="glass rounded-2xl p-6 card-hover">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-slate-400 text-sm">Running Jobs</span>
+              <span class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">⚡</span>
+            </div>
+            <p class="text-4xl font-bold text-white mb-2">3</p>
+            <p class="text-xs text-slate-400">2 scheduled, 1 running</p>
+            <div class="mt-4 space-y-2">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-emerald-400 rounded-full"></span>
+                <span class="text-xs text-slate-300">daily-backup</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-amber-400 rounded-full pulse"></span>
+                <span class="text-xs text-slate-300">memory-cleanup</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Memory Card -->
+          <div class="glass rounded-2xl p-6 card-hover">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-slate-400 text-sm">Memory</span>
+              <span class="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center">🧠</span>
+            </div>
+            <p class="text-4xl font-bold text-white mb-2">2.4MB</p>
+            <p class="text-xs text-slate-400">47 memories stored</p>
+            <div class="mt-4">
+              <div class="w-full bg-slate-700 rounded-full h-2">
+                <div class="bg-gradient-to-r from-cyan-500 to-purple-500 h-2 rounded-full" style="width: 24%"></div>
+              </div>
+              <p class="text-xs text-slate-500 mt-1">24% of limit</p>
+            </div>
           </div>
         </div>
-      </div>
-      <div id="agents" class="section">
-        <div class="grid-2">
-          <div class="card">
-            <div class="card-header"><div class="card-title">🤖 Team Agents</div><button class="btn" onclick="openModal('spawn')">+ New</button></div>
-            <div id="agentListDetail"></div>
+
+        <!-- Quick Actions -->
+        <div class="glass rounded-2xl p-6 mb-8">
+          <h2 class="text-lg font-semibold text-white mb-4">Quick Actions</h2>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <button onclick="openModal('newSession')" class="p-4 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 rounded-xl text-left transition-all group">
+              <span class="text-2xl mb-2 block">➕</span>
+              <p class="text-sm font-medium text-white group-hover:text-indigo-400">New Session</p>
+            </button>
+            <button onclick="openModal('installSkill')" class="p-4 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 rounded-xl text-left transition-all group">
+              <span class="text-2xl mb-2 block">💾</span>
+              <p class="text-sm font-medium text-white group-hover:text-purple-400">Install Skill</p>
+            </button>
+            <button onclick="openModal('scheduleJob')" class="p-4 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 rounded-xl text-left transition-all group">
+              <span class="text-2xl mb-2 block">📅</span>
+              <p class="text-sm font-medium text-white group-hover:text-amber-400">Schedule Job</p>
+            </button>
+            <button onclick="openModal('search')" class="p-4 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 rounded-xl text-left transition-all group">
+              <span class="text-2xl mb-2 block">🔍</span>
+              <p class="text-sm font-medium text-white group-hover:text-cyan-400">Search</p>
+            </button>
           </div>
-          <div class="card">
-            <div class="card-header"><div class="card-title">📊 Performance</div></div>
-            <div id="performanceStats"></div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="glass rounded-2xl p-6">
+          <h2 class="text-lg font-semibold text-white mb-4">Recent Activity</h2>
+          <div class="space-y-3" id="activityList">
+            <div class="flex items-center gap-4 p-3 bg-slate-800/50 rounded-xl">
+              <span class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">✓</span>
+              <div class="flex-1">
+                <p class="text-sm text-white">Session completed: web-research</p>
+                <p class="text-xs text-slate-500">2 minutes ago</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4 p-3 bg-slate-800/50 rounded-xl">
+              <span class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center">🤖</span>
+              <div class="flex-1">
+                <p class="text-sm text-white">New agent connected: sarah</p>
+                <p class="text-xs text-slate-500">15 minutes ago</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4 p-3 bg-slate-800/50 rounded-xl">
+              <span class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">💾</span>
+              <div class="flex-1">
+                <p class="text-sm text-white">Skill installed: github-advanced</p>
+                <p class="text-xs text-slate-500">1 hour ago</p>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div id="skills" class="section">
-        <div class="card">
-          <div class="card-header"><div class="card-title">🧠 Skills</div><button class="btn" onclick="openModal('skill')">+ Install</button></div>
-          <div id="skillsList" style="margin-top:1rem;"></div>
+      </section>
+
+      <!-- Agents Section -->
+      <section id="agents" class="section hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Agent Cards -->
+          <div class="glass rounded-2xl p-6 card-hover">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-2xl float">
+                👩‍💼
+              </div>
+              <div>
+                <h3 class="font-semibold text-white">Sarah</h3>
+                <p class="text-xs text-indigo-400">Project Manager</p>
+              </div>
+              <span class="ml-auto w-3 h-3 bg-emerald-400 rounded-full pulse"></span>
+            </div>
+            <p class="text-sm text-slate-400 mb-4">Specializes in project planning and task delegation</p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="px-2 py-1 bg-slate-700 text-xs rounded-full">project-management</span>
+              <span class="px-2 py-1 bg-slate-700 text-xs rounded-full">coordination</span>
+            </div>
+            <button class="w-full py-2 bg-indigo-500 hover:bg-indigo-600 rounded-lg text-sm font-medium transition">Message</button>
+          </div>
+
+          <div class="glass rounded-2xl p-6 card-hover">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center text-2xl float" style="animation-delay: 0.5s">
+                👨‍💻
+              </div>
+              <div>
+                <h3 class="font-semibold text-white">Mike</h3>
+                <p class="text-xs text-purple-400">Developer</p>
+              </div>
+              <span class="ml-auto w-3 h-3 bg-amber-400 rounded-full pulse"></span>
+            </div>
+            <p class="text-sm text-slate-400 mb-4">Full-stack developer specializing in React and Node.js</p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="px-2 py-1 bg-slate-700 text-xs rounded-full">react</span>
+              <span class="px-2 py-1 bg-slate-700 text-xs rounded-full">node</span>
+              <span class="px-2 py-1 bg-slate-700 text-xs rounded-full">python</span>
+            </div>
+            <button class="w-full py-2 bg-indigo-500 hover:bg-indigo-600 rounded-lg text-sm font-medium transition">Message</button>
+          </div>
+
+          <div class="glass rounded-2xl p-6 card-hover">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-2xl float" style="animation-delay: 1s">
+                🔍
+              </div>
+              <div>
+                <h3 class="font-semibold text-white">Alex</h3>
+                <p class="text-xs text-amber-400">Researcher</p>
+              </div>
+              <span class="ml-auto w-3 h-3 bg-slate-500 rounded-full"></span>
+            </div>
+            <p class="text-sm text-slate-400 mb-4">Specializes in market research and competitive analysis</p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="px-2 py-1 bg-slate-700 text-xs rounded-full">research</span>
+              <span class="px-2 py-1 bg-slate-700 text-xs rounded-full">analysis</span>
+            </div>
+            <button class="w-full py-2 bg-indigo-500 hover:bg-indigo-600 rounded-lg text-sm font-medium transition">Message</button>
+          </div>
+
+          <div class="glass rounded-2xl p-6 card-hover">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-400 to-cyan-500 flex items-center justify-center text-2xl float" style="animation-delay: 1.5s">
+                📊
+              </div>
+              <div>
+                <h3 class="font-semibold text-white">Jordan</h3>
+                <p class="text-xs text-emerald-400">Analyst</p>
+              </div>
+              <span class="ml-auto w-3 h-3 bg-emerald-400 rounded-full pulse"></span>
+            </div>
+            <p class="text-sm text-slate-400 mb-4">Data analyst specializing in metrics and reporting</p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="px-2 py-1 bg-slate-700 text-xs rounded-full">analytics</span>
+              <span class="px-2 py-1 bg-slate-700 text-xs rounded-full">reporting</span>
+            </div>
+            <button class="w-full py-2 bg-indigo-500 hover:bg-indigo-600 rounded-lg text-sm font-medium transition">Message</button>
+          </div>
+
+          <div class="glass rounded-2xl p-6 card-hover">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center text-2xl float" style="animation-delay: 2s">
+                ✍️
+              </div>
+              <div>
+                <h3 class="font-semibold text-white">Sam</h3>
+                <p class="text-xs text-pink-400">Writer</p>
+              </div>
+              <span class="ml-auto w-3 h-3 bg-emerald-400 rounded-full pulse"></span>
+            </div>
+            <p class="text-sm text-slate-400 mb-4">Content writer specializing in marketing copy</p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="px-2 py-1 bg-slate-700 text-xs rounded-full">copywriting</span>
+              <span class="px-2 py-1 bg-slate-700 text-xs rounded-full">marketing</span>
+            </div>
+            <button class="w-full py-2 bg-indigo-500 hover:bg-indigo-600 rounded-lg text-sm font-medium transition">Message</button>
+          </div>
         </div>
-      </div>
-      <div id="jobs" class="section">
-        <div class="card">
-          <div class="card-header"><div class="card-title">⏰ Jobs</div><button class="btn" onclick="openModal('job')">+ New</button></div>
-          <div id="jobsList" style="margin-top:1rem;"></div>
+      </section>
+
+      <!-- Skills Section -->
+      <section id="skills" class="section hidden">
+        <div class="glass rounded-2xl p-6">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-lg font-semibold text-white">Installed Skills</h2>
+            <button onclick="openModal('installSkill')" class="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 rounded-lg text-sm font-medium transition">
+              + Install Skill
+            </button>
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div class="p-4 bg-slate-800/50 rounded-xl text-center hover:bg-slate-800 transition cursor-pointer">
+              <span class="text-2xl mb-2 block">🐙</span>
+              <p class="text-sm font-medium text-white">GitHub</p>
+              <p class="text-xs text-indigo-400">builtin</p>
+            </div>
+            <div class="p-4 bg-slate-800/50 rounded-xl text-center hover:bg-slate-800 transition cursor-pointer">
+              <span class="text-2xl mb-2 block">🌐</span>
+              <p class="text-sm font-medium text-white">Web</p>
+              <p class="text-xs text-indigo-400">builtin</p>
+            </div>
+            <div class="p-4 bg-slate-800/50 rounded-xl text-center hover:bg-slate-800 transition cursor-pointer">
+              <span class="text-2xl mb-2 block">📧</span>
+              <p class="text-sm font-medium text-white">Email</p>
+              <p class="text-xs text-indigo-400">builtin</p>
+            </div>
+            <div class="p-4 bg-slate-800/50 rounded-xl text-center hover:bg-slate-800 transition cursor-pointer">
+              <span class="text-2xl mb-2 block">🧮</span>
+              <p class="text-sm font-medium text-white">Calculator</p>
+              <p class="text-xs text-indigo-400">builtin</p>
+            </div>
+            <div class="p-4 bg-slate-800/50 rounded-xl text-center hover:bg-slate-800 transition cursor-pointer">
+              <span class="text-2xl mb-2 block">🎨</span>
+              <p class="text-sm font-medium text-white">ImageGen</p>
+              <p class="text-xs text-emerald-400">custom</p>
+            </div>
+            <div class="p-4 bg-slate-800/50 rounded-xl text-center hover:bg-slate-800 transition cursor-pointer">
+              <span class="text-2xl mb-2 block">🔍</span>
+              <p class="text-sm font-medium text-white">Research</p>
+              <p class="text-xs text-emerald-400">custom</p>
+            </div>
+          </div>
         </div>
-      </div>
-      <div id="activity" class="section">
-        <div class="card">
-          <div class="card-header"><div class="card-title">📋 Activity</div></div>
-          <div id="activityFeed" style="margin-top:1rem;"></div>
+      </section>
+
+      <!-- Jobs Section -->
+      <section id="jobs" class="section hidden">
+        <div class="glass rounded-2xl p-6">
+          <h2 class="text-lg font-semibold text-white mb-6">Cron Jobs</h2>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between p-4 bg-slate-800/50 rounded-xl">
+              <div class="flex items-center gap-4">
+                <span class="w-3 h-3 bg-emerald-400 rounded-full"></span>
+                <div>
+                  <p class="text-sm font-medium text-white">daily-backup</p>
+                  <p class="text-xs text-slate-500">Every day at 2:00 AM</p>
+                </div>
+              </div>
+              <button class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs">Run Now</button>
+            </div>
+            <div class="flex items-center justify-between p-4 bg-slate-800/50 rounded-xl">
+              <div class="flex items-center gap-4">
+                <span class="w-3 h-3 bg-amber-400 rounded-full pulse"></span>
+                <div>
+                  <p class="text-sm font-medium text-white">memory-cleanup</p>
+                  <p class="text-xs text-slate-500">Every hour</p>
+                </div>
+              </div>
+              <button class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs">Run Now</button>
+            </div>
+            <div class="flex items-center justify-between p-4 bg-slate-800/50 rounded-xl">
+              <div class="flex items-center gap-4">
+                <span class="w-3 h-3 bg-slate-500 rounded-full"></span>
+                <div>
+                  <p class="text-sm font-medium text-white">weekly-report</p>
+                  <p class="text-xs text-slate-500">Every Monday at 9:00 AM</p>
+                </div>
+              </div>
+              <button class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs">Run Now</button>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
+
+      <!-- Memory Section -->
+      <section id="memory" class="section hidden">
+        <div class="glass rounded-2xl p-6">
+          <h2 class="text-lg font-semibold text-white mb-6">Memory Bank</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-4 bg-slate-800/50 rounded-xl border-l-4 border-indigo-500">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs text-indigo-400">engineering</span>
+                <span class="text-xs text-slate-500">Feb 24</span>
+              </div>
+              <p class="text-sm text-white">Project structure updated with new modules</p>
+            </div>
+            <div class="p-4 bg-slate-800/50 rounded-xl border-l-4 border-emerald-500">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs text-emerald-400">finance</span>
+                <span class="text-xs text-slate-500">Feb 23</span>
+              </div>
+              <p class="text-sm text-white">Budget allocated for Q1 operations</p>
+            </div>
+            <div class="p-4 bg-slate-800/50 rounded-xl border-l-4 border-purple-500">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs text-purple-400">strategy</span>
+                <span class="text-xs text-slate-500">Feb 22</span>
+              </div>
+              <p class="text-sm text-white">New market expansion plan approved</p>
+            </div>
+            <div class="p-4 bg-slate-800/50 rounded-xl border-l-4 border-amber-500">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs text-amber-400">sales</span>
+                <span class="text-xs text-slate-500">Feb 21</span>
+              </div>
+              <p class="text-sm text-white">Landed 3 new enterprise clients</p>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
-  <div class="modal" id="modal">
-    <div class="modal-content">
-      <div class="modal-header"><h2 id="modalTitle">Modal</h2><button class="modal-close" onclick="closeModal()">&times;</button></div>
-      <div id="modalBody"></div>
+
+  <!-- Modal -->
+  <div id="modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50">
+    <div class="glass rounded-2xl p-6 w-full max-w-md">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-white" id="modalTitle">New Session</h3>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-white text-2xl">&times;</button>
+      </div>
+      <div id="modalContent">
+        <input type="text" placeholder="Session name..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white mb-4 focus:outline-none focus:border-indigo-500">
+        <textarea placeholder="What would you like to accomplish?" rows="4" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white mb-4 focus:outline-none focus:border-indigo-500"></textarea>
+        <button class="w-full py-3 bg-indigo-500 hover:bg-indigo-600 rounded-lg font-medium transition">Start Session</button>
+      </div>
     </div>
   </div>
+
   <script>
-    const agents = [
-      {name:'Sarah',role:'COO / Lead Gen',status:'working',tasks:12},
-      {name:'Mike',role:'Scraper / Data',status:'idle',tasks:3},
-      {name:'Alex',role:'CFO / Ops',status:'thinking',tasks:5},
-      {name:'Jordan',role:'Executive',status:'working',tasks:8},
-      {name:'Sam',role:'Designer',status:'working',tasks:6}
-    ];
-    const skills = [
-      {n:'apify',t:'builtin'},{n:'ai-csuite',t:'builtin'},{n:'conway-money',t:'builtin'},
-      {n:'mailchimp',t:'builtin'},{n:'marketing-mode',t:'builtin'},{n:'moltguard',t:'builtin'},
-      {n:'permit-lead-coo',t:'builtin'},{n:'video-frames',t:'builtin'},{n:'youtube-api',t:'builtin'},
-      {n:'youtube-transcript',t:'builtin'},{n:'permit-lead-finder',t:'custom'},{n:'builder-quote',t:'custom'}
-    ];
-    const activities = [
-      {i:'📝',t:'Mission Control updated',time:'2 min ago',by:'Sam'},
-      {i:'📚',t:'OpenClaw Handbook written',time:'1 hour ago',by:'Jordan'},
-      {i:'🔧',t:'BuilderQuote skill created',time:'2 hours ago',by:'Team'},
-      {i:'🌐',t:'Conway VM provisioned',time:'Yesterday',by:'Alex'},
-      {i:'👥',t:'Team renamed',time:'Yesterday',by:'Sarg'}
-    ];
-    const jobs = [{id:'daily-permit',n:'Daily Permit Check',s:'8:00 AM daily',st:'scheduled'}];
-    
-    function getGrad(s){return s==='working'?'linear-gradient(135deg,#22c55e,#16a34a)':s==='thinking'?'linear-gradient(135deg,#f59e0b,#d97706)':'linear-gradient(135deg,#666,#444)'}
-    function getE(n){return{Sarah:'👩‍💼',Mike:'🕷️',Alex:'💰',Jordan:'🎯',Sam:'🎨'}[n]||'🤖'}
-    
-    function render(){
-      document.getElementById('agentList').innerHTML=agents.map(a=>`<div class="agent-card"><div class="agent-avatar" style="background:${getGrad(a.status)}">${getE(a.name)}</div><div class="agent-info"><div class="agent-name">${a.name}</div><div class="agent-role">${a.role}</div></div><div class="agent-status"><span class="status-indicator ${a.status}"></span>${a.status}</div></div>`).join('');
-      document.getElementById('agentListDetail').innerHTML=agents.map(a=>`<div class="agent-card"><div class="agent-avatar" style="background:${getGrad(a.status)}">${getE(a.name)}</div><div class="agent-info"><div class="agent-name">${a.name}</div><div class="agent-role">${a.role}</div></div><div class="agent-status"><span class="status-indicator ${a.status}"></span>${a.status}</div></div>`).join('');
-      document.getElementById('skillsList').innerHTML=skills.map(s=>`<span class="skill-tag ${s.t}">${s.t==='builtin'?'📡':'🔧'} ${s.n}</span>`).join('');
-      document.getElementById('jobsList').innerHTML=jobs.map(j=>`<div style="padding:1rem;border-bottom:1px solid #1a1a1f;display:flex;justify-content:space-between;"><span><strong>${j.n}</strong><br><span style="color:#666;font-size:0.875rem;">${j.s}</span></span><span style="padding:0.25rem 0.75rem;background:#6366f120;color:#6366f1;border-radius:100px;font-size:0.75rem;">${j.st}</span></div>`).join('');
-      document.getElementById('activityFeed').innerHTML=activities.map(a=>`<div style="display:flex;gap:1rem;padding:1rem 0;border-bottom:1px solid #1a1a1f;"><div style="width:36px;height:36px;background:#1a1a1f;border-radius:8px;display:flex;align-items:center;justify-content:center;">${a.i}</div><div><div>${a.t}</div><div style="color:#666;font-size:0.8125rem;">${a.time} • ${a.by}</div></div></div>`).join('');
-      const max=Math.max(...agents.map(a=>a.tasks));
-      document.getElementById('performanceStats').innerHTML=agents.map(a=>`<div style="margin-bottom:1rem;"><div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;"><span>${a.name}</span><span style="color:#22c55e;">${a.tasks} tasks</span></div><div class="progress-bar"><div class="progress-fill" style="width:${(a.tasks/max)*100}%;"></div></div></div>`).join('');
+    function showSection(section) {
+      document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+      document.getElementById(section).classList.remove('hidden');
+      
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('active', 'text-white', 'border-indigo-500');
+        btn.classList.add('text-slate-400', 'border-transparent');
+      });
+      document.querySelector(`[data-section="${section}"]`).classList.add('active', 'text-white', 'border-indigo-500');
+      document.querySelector(`[data-section="${section}"]`).classList.remove('text-slate-400', 'border-transparent');
     }
-    
-    function showSection(id){
-      document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-      document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      event.target.classList.add('active');
+
+    function openModal(type) {
+      document.getElementById('modal').classList.remove('hidden');
+      document.getElementById('modal').classList.add('flex');
     }
-    
-    function openModal(type){
-      const m=document.getElementById('modal'),t=document.getElementById('modalTitle'),b=document.getElementById('modalBody');
-      if(type==='spawn'){t.textContent='Spawn Agent';b.innerHTML='<div class="form-group"><label class="form-label">Name</label><input class="form-input" id="inName" placeholder="e.g., Charlie"></div><div class="form-group"><label class="form-label">Role</label><input class="form-input" id="inRole" placeholder="e.g., Sales"></div><button class="btn" style="width:100%;" onclick="spawnAgent()">Spawn</button>';}
-      else if(type==='skill'){t.textContent='Install Skill';b.innerHTML='<div class="form-group"><label class="form-label">Skill</label><input class="form-input" id="inSkill" placeholder="clawhub install..."></div><button class="btn" style="width:100%;" onclick="closeModal()">Install</button>';}
-      else if(type==='job'){t.textContent='New Job';b.innerHTML='<div class="form-group"><label class="form-label">Job Name</label><input class="form-input" id="inJob" placeholder="e.g., Morning Report"></div><div class="form-group"><label class="form-label">Schedule</label><input class="form-input" id="inSched" placeholder="0 8 * * *"></div><button class="btn" style="width:100%;" onclick="closeModal()">Create</button>';}
-      m.classList.add('active');
+
+    function closeModal() {
+      document.getElementById('modal').classList.add('hidden');
+      document.getElementById('modal').classList.remove('flex');
     }
-    function closeModal(){document.getElementById('modal').classList.remove('active');}
-    function spawnAgent(){const n=document.getElementById('inName').value;if(n){alert('🤖 Agent '+n+' would spawn here!');closeModal();}}
-    
-    let refreshSec=30;
-    setInterval(()=>{refreshSec--;document.getElementById('lastRefresh').textContent='Auto-refresh: '+refreshSec+'s';if(refreshSec<=0){refreshData();refreshSec=30;}},1000);
-    
-    function refreshData(){
-      document.getElementById('gatewayStatus').classList.remove('offline');
-      document.getElementById('gatewayStatusText').textContent='Gateway Running';
-      document.getElementById('lastRefresh').textContent='Just refreshed';
-    }
-    
-    render();
+
+    // Auto-refresh stats
+    setInterval(() => {
+      document.getElementById('sessionCount').textContent = Math.floor(Math.random() * 3) + 4;
+    }, 5000);
   </script>
 </body>
 </html>
