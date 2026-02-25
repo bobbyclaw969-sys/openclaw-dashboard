@@ -3,258 +3,219 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OpenClaw Dashboard | Operations Center</title>
+  <title>OpenClaw Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #0a0a0f; color: #fff; min-height: 100vh; }
+    body { font-family: 'Inter', sans-serif; background: #0a0a0f; color: #fff; min-height: 100vh; }
     .glass { background: rgba(15, 15, 20, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); }
     .gradient-text { background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .glow { box-shadow: 0 0 40px rgba(99, 102, 241, 0.3); }
     .pulse { animation: pulse 2s infinite; }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-    .float { animation: float 3s ease-in-out infinite; }
-    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-    .spin { animation: spin 2s linear infinite; }
-    @keyframes spin { 100% { transform: rotate(360deg); } }
   </style>
 </head>
-<body class="min-h-screen">
+<body>
   <div class="min-h-screen bg-[#0a0a0f]">
-    <!-- Header -->
-    <header class="glass sticky top-0 z-50">
-      <div class="max-w-7xl mx-auto px-6 py-4">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-2xl shadow-lg glow">
-              🦞
-            </div>
-            <div>
-              <h1 class="text-2xl font-bold gradient-text">OpenClaw</h1>
-              <p class="text-xs text-slate-500">AI Operations Platform</p>
-            </div>
+    <header class="glass sticky top-0 z-50 px-6 py-4">
+      <div class="flex items-center justify-between max-w-7xl mx-auto">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-2xl">🦞</div>
+          <div>
+            <h1 class="text-2xl font-bold gradient-text">OpenClaw</h1>
+            <p class="text-xs text-slate-500">AI Operations Platform</p>
           </div>
-          
-          <div class="flex items-center gap-6">
-            <div class="flex items-center gap-8">
-              <div class="text-center">
-                <p class="text-2xl font-bold text-white" id="sessionCount">5</p>
-                <p class="text-xs text-slate-500">Sessions</p>
-              </div>
-              <div class="text-center">
-                <p class="text-2xl font-bold text-emerald-400" id="SkillCount">12</p>
-                <p class="text-xs text-slate-500">Skills</p>
-              </div>
-              <div class="text-center">
-                <p class="text-2xl font-bold text-purple-400" id="jobCount">3</p>
-                <p class="text-xs text-slate-500">Jobs</p>
-              </div>
-            </div>
-            
-            <div class="flex items-center gap-3 px-4 py-2 bg-emerald-500/10 border border-emerald-500/30 rounded-full">
-              <span class="w-2 h-2 bg-emerald-400 rounded-full pulse"></span>
-              <span class="text-sm text-emerald-400 font-medium">System Online</span>
-            </div>
+        </div>
+        <div class="flex items-center gap-6">
+          <div class="flex gap-8">
+            <div class="text-center"><p class="text-2xl font-bold" id="sessions">5</p><p class="text-xs text-slate-500">Sessions</p></div>
+            <div class="text-center"><p class="text-2xl font-bold text-emerald-400">12</p><p class="text-xs text-slate-500">Skills</p></div>
+            <div class="text-center"><p class="text-2xl font-bold text-purple-400">3</p><p class="text-xs text-slate-500">Jobs</p></div>
+          </div>
+          <div class="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/30 rounded-full">
+            <span class="w-2 h-2 bg-emerald-400 rounded-full pulse"></span>
+            <span class="text-sm text-emerald-400">Online</span>
           </div>
         </div>
       </div>
     </header>
 
-    <!-- Navigation -->
-    <nav class="glass border-t border-b border-white/5">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="flex gap-2 overflow-x-auto">
-          <button onclick="showSection('overview')" class="nav-btn active px-6 py-4 text-sm font-medium text-white border-b-2 border-indigo-500" data-section="overview">
-            📊 Overview
-          </button>
-          <button onclick="showSection('agents')" class="nav-btn px-6 py-4 text-sm font-medium text-slate-400 hover:text-white border-b-2 border-transparent" data-section="agents">
-            🤖 Agents
-          </button>
-          <button onclick="showSection('skills')" class="nav-btn px-6 py-4 text-sm font-medium text-slate-400 hover:text-white border-b-2 border-transparent" data-section="skills">
-            💡 Skills
-          </button>
-          <button onclick="showSection('jobs')" class="nav-btn px-6 py-4 text-sm font-medium text-slate-400 hover:text-white border-b-2 border-transparent" data-section="jobs">
-            📋 Jobs
-          </button>
-          <button onclick="showSection('memory')" class="nav-btn px-6 py-4 text-sm font-medium text-slate-400 hover:text-white border-b-2 border-transparent" data-section="memory">
-            🧠 Memory
-          </button>
-        </div>
+    <nav class="glass border-y px-6">
+      <div class="flex gap-2 max-w-7xl mx-auto overflow-x-auto">
+        <button onclick="show('overview')" class="nav-btn active px-6 py-4 text-sm font-medium text-white border-b-2 border-indigo-500">📊 Overview</button>
+        <button onclick="show('agents')" class="nav-btn px-6 py-4 text-sm font-medium text-slate-400 border-b-2 border-transparent hover:text-white">🤖 Agents</button>
+        <button onclick="show('skills')" class="nav-btn px-6 py-4 text-sm font-medium text-slate-400 border-b-2 border-transparent hover:text-white">💡 Skills</button>
+        <button onclick="show('jobs')" class="nav-btn px-6 py-4 text-sm font-medium text-slate-400 border-b-2 border-transparent hover:text-white">📋 Jobs</button>
+        <button onclick="show('calendar')" class="nav-btn px-6 py-4 text-sm font-medium text-slate-400 border-b-2 border-transparent hover:text-white">📅 Calendar</button>
+        <button onclick="show('memory')" class="nav-btn px-6 py-4 text-sm font-medium text-slate-400 border-b-2 border-transparent hover:text-white">🧠 Memory</button>
       </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-6 py-8">
-      <!-- Overview Section -->
+    <main class="max-w-7xl mx-auto p-6">
+      <!-- Overview -->
       <section id="overview" class="section">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <!-- Active Sessions Card -->
+        <div class="grid grid-cols-4 gap-6 mb-8">
           <div class="glass rounded-2xl p-6">
-            <div class="flex items-center justify-between mb-4">
-              <span class="text-slate-400 text-sm">Active Sessions</span>
-              <span class="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center">📱</span>
-            </div>
-            <p class="text-4xl font-bold text-white mb-2" id="activeSessions">5</p>
-            <p class="text-xs text-emerald-400" id="sessionsChange">↑ 2 from yesterday</p>
-            <!-- Live Progress Bar -->
-            <div class="mt-4">
-              <div class="flex justify-between text-xs text-slate-500 mb-1">
-                <span>Capacity</span>
-                <span id="capacityPercent">42%</span>
-              </div>
-              <div class="w-full bg-slate-700 rounded-full h-2">
-                <div id="capacityBar" class="bg-gradient-to-r from-indigo-500 to-purple-500 h-2 rounded-full transition-all duration-500" style="width: 42%"></div>
-              </div>
-            </div>
+            <p class="text-slate-400 text-sm mb-2">Active Sessions</p>
+            <p class="text-4xl font-bold mb-2" id="sessionCount">5</p>
+            <div class="w-full bg-slate-700 rounded-full h-2 mt-4"><div class="bg-indigo-500 h-2 rounded-full" style="width:42%"></div></div>
           </div>
-
-          <!-- Skills Card -->
           <div class="glass rounded-2xl p-6">
-            <div class="flex items-center justify-between mb-4">
-              <span class="text-slate-400 text-sm">Installed Skills</span>
-              <span class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center">💡</span>
-            </div>
-            <p class="text-4xl font-bold text-white mb-2" id="skillsCount">12</p>
-            <p class="text-xs text-slate-400">8 builtin, 4 custom</p>
-            <!-- Live Progress -->
-            <div class="mt-4">
-              <div class="flex justify-between text-xs text-slate-500 mb-1">
-                <span>API Calls Today</span>
-                <span id="apiCalls">1,247</span>
-              </div>
-              <div class="w-full bg-slate-700 rounded-full h-2">
-                <div id="apiBar" class="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-500" style="width: 65%"></div>
-              </div>
-            </div>
+            <p class="text-slate-400 text-sm mb-2">Running Jobs</p>
+            <p class="text-4xl font-bold text-amber-400 mb-2">3</p>
+            <p class="text-xs text-slate-500">1 running, 2 scheduled</p>
           </div>
-
-          <!-- Active Jobs Card -->
           <div class="glass rounded-2xl p-6">
-            <div class="flex items-center justify-between mb-4">
-              <span class="text-slate-400 text-sm">Running Jobs</span>
-              <span class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">⚡</span>
-            </div>
-            <p class="text-4xl font-bold text-white mb-2" id="runningJobs">3</p>
-            <p class="text-xs text-slate-400">2 scheduled, 1 running</p>
-            <!-- Live Job Progress -->
-            <div class="mt-4 space-y-2">
-              <div class="flex items-center gap-2">
-                <span class="w-2 h-2 bg-emerald-400 rounded-full"></span>
-                <span class="text-xs text-slate-300 flex-1">daily-backup</span>
-                <span class="text-xs text-emerald-400">✓</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <span class="w-2 h-2 bg-amber-400 rounded-full pulse"></span>
-                <span class="text-xs text-slate-300 flex-1">memory-cleanup</span>
-                <span class="text-xs text-amber-400">78%</span>
-              </div>
-            </div>
+            <p class="text-slate-400 text-sm mb-2">Skills</p>
+            <p class="text-4xl font-bold text-purple-400 mb-2">12</p>
+            <p class="text-xs text-slate-500">8 builtin, 4 custom</p>
           </div>
-
-          <!-- Memory Card -->
           <div class="glass rounded-2xl p-6">
-            <div class="flex items-center justify-between mb-4">
-              <span class="text-slate-400 text-sm">Memory</span>
-              <span class="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center">🧠</span>
-            </div>
-            <p class="text-4xl font-bold text-white mb-2" id="memoryUsage">2.4MB</p>
-            <p class="text-xs text-slate-400" id="memoryCount">47 memories stored</p>
-            <div class="mt-4">
-              <div class="w-full bg-slate-700 rounded-full h-2">
-                <div id="memoryBar" class="bg-gradient-to-r from-cyan-500 to-indigo-500 h-2 rounded-full" style="width: 24%"></div>
-              </div>
-              <p class="text-xs text-slate-500 mt-1">24% of limit</p>
-            </div>
+            <p class="text-slate-400 text-sm mb-2">Memory</p>
+            <p class="text-4xl font-bold text-cyan-400 mb-2">2.4MB</p>
+            <div class="w-full bg-slate-700 rounded-full h-2 mt-4"><div class="bg-cyan-500 h-2 rounded-full" style="width:24%"></div></div>
           </div>
         </div>
 
         <!-- Quick Actions -->
         <div class="glass rounded-2xl p-6 mb-8">
-          <h2 class="text-lg font-semibold text-white mb-4">⚡ Quick Actions</h2>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <button onclick="runAction('newSession')" class="p-4 bg-indigo-500/10 hover:bg-indigo-500/30 border border-indigo-500/30 rounded-xl text-left transition-all group">
-              <span class="text-2xl mb-2 block">➕</span>
-              <p class="text-sm font-medium text-white group-hover:text-indigo-400">New Session</p>
+          <h2 class="text-lg font-semibold mb-4">⚡ Quick Actions</h2>
+          <div class="grid grid-cols-5 gap-4">
+            <button onclick="quickAction('newSession')" class="p-4 bg-indigo-500/10 border border-indigo-500/30 rounded-xl hover:bg-indigo-500/20 transition text-center">
+              <span class="text-2xl block mb-2">➕</span>
+              <p class="text-sm">New Session</p>
             </button>
-            <button onclick="runAction('installSkill')" class="p-4 bg-purple-500/10 hover:bg-purple-500/30 border border-purple-500/30 rounded-xl text-left transition-all group">
-              <span class="text-2xl mb-2 block">💾</span>
-              <p class="text-sm font-medium text-white group-hover:text-purple-400">Install Skill</p>
+            <button onclick="quickAction('installSkill')" class="p-4 bg-purple-500/10 border border-purple-500/30 rounded-xl hover:bg-purple-500/20 transition text-center">
+              <span class="text-2xl block mb-2">💾</span>
+              <p class="text-sm">Install Skill</p>
             </button>
-            <button onclick="runAction('scheduleJob')" class="p-4 bg-amber-500/10 hover:bg-amber-500/30 border border-amber-500/30 rounded-xl text-left transition-all group">
-              <span class="text-2xl mb-2 block">📅</span>
-              <p class="text-sm font-medium text-white group-hover:text-amber-400">Schedule Job</p>
+            <button onclick="quickAction('scheduleJob')" class="p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl hover:bg-amber-500/20 transition text-center">
+              <span class="text-2xl block mb-2">📅</span>
+              <p class="text-sm">Schedule Job</p>
             </button>
-            <button onclick="runAction('search')" class="p-4 bg-cyan-500/10 hover:bg-cyan-500/30 border border-cyan-500/30 rounded-xl text-left transition-all group">
-              <span class="text-2xl mb-2 block">🔍</span>
-              <p class="text-sm font-medium text-white group-hover:text-cyan-400">Search</p>
+            <button onclick="quickAction('addEvent')" class="p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-xl hover:bg-cyan-500/20 transition text-center">
+              <span class="text-2xl block mb-2">📝</span>
+              <p class="text-sm">Add Event</p>
+            </button>
+            <button onclick="quickAction('search')" class="p-4 bg-pink-500/10 border border-pink-500/30 rounded-xl hover:bg-pink-500/20 transition text-center">
+              <span class="text-2xl block mb-2">🔍</span>
+              <p class="text-sm">Search</p>
             </button>
           </div>
         </div>
 
-        <!-- Recent Activity -->
+        <!-- Activity -->
         <div class="glass rounded-2xl p-6">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-semibold text-white">📊 Live Activity</h2>
-            <span class="flex items-center gap-2 text-xs text-emerald-400">
-              <span class="w-2 h-2 bg-emerald-400 rounded-full pulse"></span>
-              Live
-            </span>
-          </div>
-          <div class="space-y-3" id="activityList">
-            <!-- Activity items will be dynamically added -->
+          <h2 class="text-lg font-semibold mb-4">📊 Live Activity</h2>
+          <div class="space-y-3" id="activity">
+            <div class="flex items-center gap-4 p-3 bg-slate-800/50 rounded-xl"><span class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">✓</span><div><p class="text-sm">Session completed: web-research</p><p class="text-xs text-slate-500">2 min ago</p></div></div>
+            <div class="flex items-center gap-4 p-3 bg-slate-800/50 rounded-xl"><span class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center">🤖</span><div><p class="text-sm">Agent connected: Sarah</p><p class="text-xs text-slate-500">5 min ago</p></div>
           </div>
         </div>
       </section>
 
-      <!-- Agents Section -->
+      <!-- Agents -->
       <section id="agents" class="section hidden">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="agentsGrid">
-          <!-- Agent cards will be dynamically added -->
+        <div class="grid grid-cols-3 gap-6" id="agentsGrid">
+          <div class="glass rounded-2xl p-6">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-2xl">👩‍💼</div>
+              <div><h3 class="font-semibold">Sarah</h3><p class="text-xs text-indigo-400">Project Manager</p></div>
+              <span class="ml-auto w-3 h-3 rounded-full bg-emerald-400"></span>
+            </div>
+            <p class="text-sm text-slate-400 mb-4">Specializes in project management</p>
+            <button onclick="messageAgent('Sarah')" class="w-full py-2 bg-indigo-500/20 text-indigo-400 rounded-lg hover:bg-indigo-500/30">💬 Message</button>
+          </div>
+          <div class="glass rounded-2xl p-6">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-2xl">👨‍💻</div>
+              <div><h3 class="font-semibold">Mike</h3><p class="text-xs text-purple-400">Developer</p></div>
+              <span class="ml-auto w-3 h-3 rounded-full bg-amber-400 pulse"></span>
+            </div>
+            <p class="text-sm text-slate-400 mb-4">Full-stack developer</p>
+            <button onclick="messageAgent('Mike')" class="w-full py-2 bg-indigo-500/20 text-indigo-400 rounded-lg hover:bg-indigo-500/30">💬 Message</button>
+          </div>
+          <div class="glass rounded-2xl p-6">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center text-2xl">🔍</div>
+              <div><h3 class="font-semibold">Alex</h3><p class="text-xs text-cyan-400">Researcher</p></div>
+              <span class="ml-auto w-3 h-3 rounded-full bg-slate-500"></span>
+            </div>
+           text-sm text-s <p class="late-400 mb-4">Market research specialist</p>
+            <button onclick="messageAgent('Alex')" class="w-full py-2 bg-indigo-500/20 text-indigo-400 rounded-lg hover:bg-indigo-500/30">💬 Message</button>
+          </div>
         </div>
       </section>
 
-      <!-- Skills Section -->
+      <!-- Skills -->
       <section id="skills" class="section hidden">
         <div class="glass rounded-2xl p-6">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="text-lg font-semibold text-white">💡 Installed Skills</h2>
-            <button onclick="openModal('installSkill')" class="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 rounded-lg text-sm font-medium transition">
-              + Install Skill
-            </button>
-          </div>
-          <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4" id="skillsGrid">
-            <!-- Skills will be dynamically added -->
+          <div class="grid grid-cols-6 gap-4">
+            <div class="p-4 bg-slate-800/50 rounded-xl text-center"><span class="text-3xl block mb-2">🐙</span><p class="text-sm">GitHub</p><p class="text-xs text-indigo-400">builtin</p></div>
+            <div class="p-4 bg-slate-800/50 rounded-xl text-center"><span class="text-3xl block mb-2">🌐</span><p class="text-sm">Web</p><p class="text-xs text-indigo-400">builtin</p></div>
+            <div class="p-4 bg-slate-800/50 rounded-xl text-center"><span class="text-3xl block mb-2">📧</span><p class="text-sm">Email</p><p class="text-xs text-indigo-400">builtin</p></div>
+            <div class="p-4 bg-slate-800/50 rounded-xl text-center"><span class="text-3xl block mb-2">🎨</span><p class="text-sm">ImageGen</p><p class="text-xs text-emerald-400">custom</p></div>
+            <div class="p-4 bg-slate-800/50 rounded-xl text-center"><span class="text-3xl block mb-2">🔬</span><p class="text-sm">Research</p><p class="text-xs text-emerald-400">custom</p></div>
+            <div class="p-4 bg-slate-800/50 rounded-xl text-center"><span class="text-3xl block mb-2">🧠</span><p class="text-sm">Memory</p><p class="text-xs text-indigo-400">builtin</p></div>
           </div>
         </div>
       </section>
 
-      <!-- Jobs Section -->
+      <!-- Jobs -->
       <section id="jobs" class="section hidden">
         <div class="glass rounded-2xl p-6">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="text-lg font-semibold text-white">📋 Cron Jobs</h2>
-            <button onclick="runAction('newJob')" class="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 rounded-lg text-sm font-medium transition">
-              + New Job
-            </button>
-          </div>
-          <div class="space-y-3" id="jobsList">
-            <!-- Jobs will be dynamically added -->
+          <div class="space-y-3">
+            <div class="flex items-center justify-between p-4 bg-slate-800/50 rounded-xl">
+              <div class="flex items-center gap-4"><span class="w-3 h-3 rounded-full bg-emerald-400"></span><div><p class="text-sm font-medium">daily-backup</p><p class="text-xs text-slate-500">Every day 2AM</p></div></div>
+              <button onclick="runJob('daily-backup')" class="px-3 py-1 bg-slate-700 rounded text-xs hover:bg-slate-600">▶ Run</button>
+            </div>
+            <div class="flex items-center justify-between p-4 bg-slate-800/50 rounded-xl">
+              <div class="flex items-center gap-4"><span class="w-3 h-3 rounded-full bg-amber-400 pulse"></span><div><p class="text-sm font-medium">memory-cleanup</p><p class="text-xs text-slate-500">Every hour</p></div></div>
+              <button class="px-3 py-1 bg-red-500/20 text-red-400 rounded text-xs">⏹ Stop</button>
+            </div>
+            <div class="flex items-center justify-between p-4 bg-slate-800/50 rounded-xl">
+              <div class="flex items-center gap-4"><span class="w-3 h-3 rounded-full bg-slate-500"></span><div><p class="text-sm font-medium">weekly-report</p><p class="text-xs text-slate-500">Monday 9AM</p></div></div>
+              <button class="px-3 py-1 bg-emerald-500/20 text-emerald-400 rounded text-xs">▶ Start</button>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- Memory Section -->
-      <section id="memory" class="section hidden">
+      <!-- Calendar -->
+      <section id="calendar" class="section hidden">
         <div class="glass rounded-2xl p-6">
           <div class="flex items-center justify-between mb-6">
-            <h2 class="text-lg font-semibold text-white">🧠 Memory Bank</h2>
-            <button onclick="runAction('newMemory')" class="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 rounded-lg text-sm font-medium transition">
-              + Add Memory
-            </button>
+            <h2 class="text-lg font-semibold" id="calTitle">February 2026</h2>
+            <button onclick="prevMonth()" class="p-2 hover:bg-slate-700 rounded">◀</button>
+            <button onclick="nextMonth()" class="p-2 hover:bg-slate-700 rounded">▶</button>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="memoryList">
-            <!-- Memories will be dynamically added -->
+          <div class="grid grid-cols-7 gap-1 mb-4">
+            <div class="text-center text-xs text-slate-500 py-2">Sun</div>
+            <div class="text-center text-xs text-slate-500 py-2">Mon</div>
+            <div class="text-center text-xs text-slate-500 py-2">Tue</div>
+            <div class="text-center text-xs text-slate-500 py-2">Wed</div>
+            <div class="text-center text-xs text-slate-500 py-2">Thu</div>
+            <div class="text-center text-xs text-slate-500 py-2">Fri</div>
+            <div class="text-center text-xs text-slate-500 py-2">Sat</div>
+          </div>
+          <div class="grid grid-cols-7 gap-1" id="calGrid"></div>
+        </div>
+      </section>
+
+      <!-- Memory -->
+      <section id="memory" class="section hidden">
+        <div class="glass rounded-2xl p-6">
+          <div class="grid grid-cols-2 gap-4">
+            <div class="p-4 bg-slate-800/50 rounded-xl border-l-4 border-indigo-500">
+              <p class="text-xs text-indigo-400 mb-1">ENGINEERING</p>
+              <p class="font-medium">Project structure updated</p>
+              <p class="text-xs text-slate-500 mt-2">Today</p>
+            </div>
+            <div class="p-4 bg-slate-800/50 rounded-xl border-l-4 border-emerald-500">
+              <p class="text-xs text-emerald-400 mb-1">FINANCE</p>
+              <p class="font-medium">Budget allocation</p>
+              <p class="text-xs text-slate-500 mt-2">Yesterday</p>
+            </div>
           </div>
         </div>
       </section>
@@ -262,268 +223,86 @@
   </div>
 
   <!-- Modal -->
-  <div id="modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50">
+  <div id="modal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50">
     <div class="glass rounded-2xl p-6 w-full max-w-md">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-semibold text-white" id="modalTitle">Action</h3>
-        <button onclick="closeModal()" class="text-slate-400 hover:text-white text-2xl">&times;</button>
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold" id="modalTitle">Action</h3>
+        <button onclick="closeModal()" class="text-2xl">&times;</button>
       </div>
-      <div id="modalContent">
-        <!-- Dynamic content -->
-      </div>
+      <div id="modalContent"></div>
     </div>
   </div>
 
-  <!-- Toast Notification -->
-  <div id="toast" class="fixed bottom-4 right-4 transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-4 right-4 transform translate-y-20 opacity-0 transition-all duration-300">
     <div class="glass rounded-xl px-6 py-3 flex items-center gap-3">
-      <span id="toastIcon">✓</span>
-      <span id="toastMessage" class="text-white"></span>
+      <span id="toastMsg"></span>
     </div>
   </div>
 
   <script>
-    // Real data
-    const agents = [
-      { id: 1, name: 'Sarah', role: 'Project Manager', status: 'working', specialty: 'project-management', avatar: '👩‍💼', tasksCompleted: 234 },
-      { id: 2, name: 'Mike', role: 'Developer', status: 'working', specialty: 'development', avatar: '👨‍💻', tasksCompleted: 156 },
-      { id: 3, name: 'Alex', role: 'Researcher', status: 'idle', specialty: 'research', avatar: '🔍', tasksCompleted: 89 },
-      { id: 4, name: 'Jordan', role: 'Analyst', status: 'thinking', specialty: 'analytics', avatar: '📊', tasksCompleted: 245 },
-      { id: 5, name: 'Sam', role: 'Writer', status: 'working', specialty: 'content', avatar: '✍️', tasksCompleted: 312 },
+    let month = new Date(2026, 1, 1);
+    let events = [
+      {date: '2026-02-25', title: 'Team Standup', time: '09:00'},
+      {date: '2026-02-28', title: 'Sprint Review', time: '14:00'},
     ];
 
-    const skills = [
-      { name: 'GitHub', type: 'builtin', icon: '🐙', description: 'Repository management' },
-      { name: 'Web', type: 'builtin', icon: '🌐', description: 'Web search and fetching' },
-      { name: 'Email', type: 'builtin', icon: '📧', description: 'Email operations' },
-      { name: 'Calculator', type: 'builtin', icon: '🧮', description: 'Math operations' },
-      { name: 'ImageGen', type: 'custom', icon: '🎨', description: 'AI image generation' },
-      { name: 'Research', type: 'custom', icon: '🔬', description: 'Deep research' },
-      { name: 'Memory', type: 'builtin', icon: '🧠', description: 'Memory management' },
-      { name: 'Browser', type: 'builtin', icon: '🌎', description: 'Browser automation' },
-    ];
-
-    const jobs = [
-      { id: 1, name: 'daily-backup', schedule: 'Every day at 2:00 AM', status: 'completed', lastRun: '2:00 AM' },
-      { id: 2, name: 'memory-cleanup', schedule: 'Every hour', status: 'running', progress: 78 },
-      { id: 3, name: 'weekly-report', schedule: 'Every Monday at 9:00 AM', status: 'pending', lastRun: 'Mon 9:00 AM' },
-      { id: 4, name: 'health-check', schedule: 'Every 5 minutes', status: 'running', progress: 45 },
-    ];
-
-    const memories = [
-      { id: 1, category: 'engineering', title: 'Project structure updated', date: 'Today', preview: 'New modules added to the architecture' },
-      { id: 2, category: 'finance', title: 'Budget allocation', date: 'Yesterday', preview: 'Q1 budget approved for operations' },
-      { id: 3, category: 'strategy', title: 'Market expansion', date: 'Feb 22', preview: 'New market expansion plan approved' },
-      { id: 4, category: 'sales', title: 'Enterprise clients', date: 'Feb 21', preview: '3 new enterprise clients landed' },
-    ];
-
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
-      renderAgents();
-      renderSkills();
-      renderJobs();
-      renderMemories();
-      startLiveUpdates();
-    });
-
-    function showSection(section) {
+    function show(section) {
       document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
       document.getElementById(section).classList.remove('hidden');
-      
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.classList.remove('active', 'text-white', 'border-indigo-500');
-        btn.classList.add('text-slate-400', 'border-transparent');
-      });
-      document.querySelector(`[data-section="${section}"]`).classList.add('active', 'text-white', 'border-indigo-500');
-      document.querySelector(`[data-section="${section}"]`).classList.remove('text-slate-400', 'border-transparent');
+      document.querySelectorAll('.nav-btn').forEach(b => { b.classList.remove('text-white','border-indigo-500'); b.classList.add('text-slate-400','border-transparent'); });
+      event.target.classList.add('text-white','border-indigo-500');
+      if (section === 'calendar') renderCalendar();
     }
 
-    function renderAgents() {
-      const grid = document.getElementById('agentsGrid');
-      grid.innerHTML = agents.map(agent => `
-        <div class="glass rounded-2xl p-6 hover:border-indigo-500/50 transition-all cursor-pointer" onclick="showAgent('${agent.name}')">
-          <div class="flex items-center gap-4 mb-4">
-            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-2xl">
-              ${agent.avatar}
-            </div>
-            <div>
-              <h3 class="font-semibold text-white">${agent.name}</h3>
-              <p class="text-xs text-indigo-400">${agent.role}</p>
-            </div>
-            <span class="ml-auto w-3 h-3 rounded-full ${agent.status === 'working' ? 'bg-emerald-400' : agent.status === 'thinking' ? 'bg-amber-400 pulse' : 'bg-slate-500'}"></span>
-          </div>
-          <p class="text-sm text-slate-400 mb-4">Specializes in ${agent.specialty.replace('-', ' ')}</p>
-          <div class="flex items-center justify-between">
-            <span class="text-xs text-slate-500">${agent.tasksCompleted} tasks</span>
-            <button class="px-3 py-1 bg-indigo-500/20 text-indigo-400 text-xs rounded hover:bg-indigo-500/30">Message</button>
-          </div>
-        </div>
-      `).join('');
+    function quickAction(action) {
+      const titles = { newSession: 'New Session', installSkill: 'Install Skill', scheduleJob: 'Schedule Job', addEvent: 'Add Event', search: 'Search' };
+      const content = {
+        newSession: '<input type="text" placeholder="What to accomplish?" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 mb-4"><button onclick="createSession()" class="w-full py-3 bg-indigo-500 rounded-lg">Start Session</button>',
+        installSkill: '<input type="text" placeholder="Search skills..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 mb-4"><div class="p-3 bg-slate-800 rounded-lg mb-2 cursor-pointer hover:bg-slate-700"><span>🔍</span> <span class="text-white">Web Research</span></div><div class="p-3 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700"><span>📊</span> <span class="text-white">Analytics Pro</span></div>',
+        scheduleJob: '<input type="text" placeholder="Job name" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 mb-4"><select class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 mb-4"><option>Every minute</option><option>Every hour</option><option>Daily</option></select><button class="w-full py-3 bg-amber-500 rounded-lg">Schedule</button>',
+        addEvent: '<input type="text" id="eventTitle" placeholder="Event title" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 mb-4"><input type="date" id="eventDate" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 mb-4"><input type="time" id="eventTime" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 mb-4"><button onclick="addEvent()" class="w-full py-3 bg-indigo-500 rounded-lg">Add Event</button>',
+        search: '<input type="text" placeholder="Search anything..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 mb-4"><button class="w-full py-3 bg-cyan-500 rounded-lg">Search</button>'
+      };
+      document.getElementById('modalTitle').textContent = titles[action];
+      document.getElementById('modalContent').innerHTML = content[action] || '<p>Coming soon...</p>';
+      document.getElementById('modal').classList.remove('hidden');
+      document.getElementById('modal').classList.add('flex');
     }
 
-    function renderSkills() {
-      const grid = document.getElementById('skillsGrid');
-      grid.innerHTML = skills.map(skill => `
-        <div class="p-4 bg-slate-800/50 rounded-xl text-center hover:bg-slate-800 transition cursor-pointer group" onclick="showSkill('${skill.name}')">
-          <span class="text-3xl mb-2 block group-hover:scale-110 transition">${skill.icon}</span>
-          <p class="text-sm font-medium text-white">${skill.name}</p>
-          <p class="text-xs ${skill.type === 'builtin' ? 'text-indigo-400' : 'text-emerald-400'}">${skill.type}</p>
-        </div>
-      `).join('');
+    function createSession() {
+      closeModal();
+      showToast('✅', 'New session started!');
+      let s = document.getElementById('sessions');
+      s.textContent = parseInt(s.textContent) + 1;
     }
 
-    function renderJobs() {
-      const list = document.getElementById('jobsList');
-      list.innerHTML = jobs.map(job => `
-        <div class="flex items-center justify-between p-4 bg-slate-800/50 rounded-xl hover:bg-slate-800 transition">
-          <div class="flex items-center gap-4">
-            <span class="w-3 h-3 rounded-full ${job.status === 'completed' ? 'bg-emerald-400' : job.status === 'running' ? 'bg-amber-400 pulse' : 'bg-slate-500'}"></span>
-            <div>
-              <p class="text-sm font-medium text-white">${job.name}</p>
-              <p class="text-xs text-slate-500">${job.schedule}</p>
-              ${job.progress ? `
-                <div class="mt-2 w-32 bg-slate-700 rounded-full h-1">
-                  <div class="bg-amber-500 h-1 rounded-full" style="width: ${job.progress}%"></div>
-                </div>
-              ` : ''}
-            </div>
-          </div>
-          <div class="flex gap-2">
-            <button onclick="runJob('${job.name}')" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs">Run Now</button>
-            <button onclick="toggleJob('${job.name}')" class="px-3 py-1 ${job.status === 'running' ? 'bg-red-500/20 text-red-400' : 'bg-emerald-500/20 text-emerald-400'} rounded text-xs">
-              ${job.status === 'running' ? 'Stop' : 'Enable'}
-            </button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function renderMemories() {
-      const list = document.getElementById('memoryList');
-      const colors = { engineering: 'indigo', finance: 'emerald', strategy: 'purple', sales: 'amber' };
-      list.innerHTML = memories.map(m => `
-        <div class="p-4 bg-slate-800/50 rounded-xl border-l-4 border-${colors[m.category]}-500 hover:bg-slate-800 transition cursor-pointer">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-xs text-${colors[m.category]}-400 uppercase">${m.category}</span>
-            <span class="text-xs text-slate-500">${m.date}</span>
-          </div>
-          <h3 class="font-semibold text-white mb-2">${m.title}</h3>
-          <p class="text-sm text-slate-400">${m.preview}</p>
-        </div>
-      `).join('');
-    }
-
-    function startLiveUpdates() {
-      // Simulate live data updates
-      setInterval(() => {
-        // Randomly update stats
-        const sessions = Math.floor(Math.random() * 3) + 4;
-        document.getElementById('activeSessions').textContent = sessions;
-        document.getElementById('sessionCount').textContent = sessions;
-        
-        // Update capacity
-        const capacity = Math.floor(Math.random() * 30) + 30;
-        document.getElementById('capacityPercent').textContent = capacity + '%';
-        document.getElementById('capacityBar').style.width = capacity + '%';
-        
-        // Update API calls
-        const apiCalls = Math.floor(Math.random() * 1000) + 1000;
-        document.getElementById('apiCalls').textContent = apiCalls.toLocaleString();
-      }, 3000);
-
-      // Add activity every few seconds
-      setInterval(addActivity, 5000);
-    }
-
-    function addActivity() {
-      const activities = [
-        { icon: '✓', text: 'Session completed: web-research', color: 'emerald' },
-        { icon: '🤖', text: 'New agent connected: mike', color: 'indigo' },
-        { icon: '💾', text: 'Skill installed: research-v2', color: 'purple' },
-        { icon: '📋', text: 'Job completed: daily-backup', color: 'cyan' },
-        { icon: '🧠', text: 'Memory saved: project-notes', color: 'amber' },
-      ];
-      
-      const activity = activities[Math.floor(Math.random() * activities.length)];
-      const list = document.getElementById('activityList');
-      
-      const div = document.createElement('div');
-      div.className = 'flex items-center gap-4 p-3 bg-slate-800/50 rounded-xl animate-pulse';
-      div.innerHTML = `
-        <span class="w-8 h-8 rounded-lg bg-${activity.color}-500/20 flex items-center justify-center">${activity.icon}</span>
-        <div class="flex-1">
-          <p class="text-sm text-white">${activity.text}</p>
-          <p class="text-xs text-slate-500">Just now</p>
-        </div>
-      `;
-      
-      list.insertBefore(div, list.firstChild);
-      
-      // Keep only 5 items
-      if (list.children.length > 5) {
-        list.removeChild(list.lastChild);
+    function addEvent() {
+      const title = document.getElementById('eventTitle').value;
+      const date = document.getElementById('eventDate').value;
+      const time = document.getElementById('eventTime').value;
+      if (title && date) {
+        events.push({date, title, time});
+        closeModal();
+        showToast('✅', 'Event added!');
+        renderCalendar();
       }
     }
 
-    function runAction(action) {
-      const titles = {
-        newSession: 'Start New Session',
-        installSkill: 'Install Skill',
-        scheduleJob: 'Schedule Job',
-        search: 'Search',
-        newJob: 'Create New Job',
-        newMemory: 'Add Memory'
-      };
-      
-      const contents = {
-        newSession: `
-          <input type="text" placeholder="What would you like to accomplish?" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white mb-4 focus:outline-none focus:border-indigo-500">
-          <div class="flex gap-2 mb-4">
-            <button class="flex-1 py-2 bg-indigo-500 hover:bg-indigo-600 rounded-lg font-medium transition">🤖 AI Agent</button>
-            <button class="flex-1 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg font-medium transition">👤 Human</button>
-          </div>
-          <button onclick="executeAction('startSession')" class="w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 rounded-lg font-medium transition">🚀 Start Session</button>
-        `,
-        installSkill: `
-          <input type="text" placeholder="Search skills..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white mb-4 focus:outline-none focus:border-indigo-500">
-          <div class="space-y-2 mb-4">
-            <div class="flex items-center justify-between p-3 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
-              <div class="flex items-center gap-3">
-                <span>🔍</span>
-                <span class="text-white">Web Research</span>
-              </div>
-              <span class="text-xs text-emerald-400">Install</span>
-            </div>
-            <div class="flex items-center justify-between p-3 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
-              <div class="flex items-center gap-3">
-                <span>📊</span>
-                <span class="text-white">Analytics Pro</span>
-              </div>
-              <span class="text-xs text-emerald-400">Install</span>
-            </div>
-          </div>
-        `,
-        scheduleJob: `
-          <input type="text" placeholder="Job name" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white mb-4 focus:outline-none focus:border-indigo-500">
-          <select class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white mb-4 focus:outline-none focus:border-indigo-500">
-            <option>Every minute</option>
-            <option>Every hour</option>
-            <option>Every day</option>
-            <option>Weekly</option>
-          </select>
-          <button onclick="executeAction('scheduleJob')" class="w-full py-3 bg-amber-500 hover:bg-amber-600 rounded-lg font-medium transition">📅 Schedule Job</button>
-        `,
-        search: `
-          <input type="text" placeholder="Search anything..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white mb-4 focus:outline-none focus:border-indigo-500">
-          <button onclick="executeAction('search')" class="w-full py-3 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-medium transition">🔍 Search</button>
-        `
-      };
-      
-      document.getElementById('modalTitle').textContent = titles[action] || 'Action';
-      document.getElementById('modalContent').innerHTML = contents[action] || '<p class="text-white">Action coming soon...</p>';
-      
+    function messageAgent(name) {
+      document.getElementById('modalTitle').textContent = 'Message ' + name;
+      document.getElementById('modalContent').innerHTML = '<div class="bg-slate-800 rounded-lg p-4 mb-4 h-40 overflow-y-auto"><div class="bg-indigo-500/20 p-3 rounded-lg inline-block max-w-[80%]"><p class="text-sm">Hi! How can I help?</p></div></div><input type="text" placeholder="Type message..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 mb-4"><button onclick="sendMsg(\''+name+'\')" class="w-full py-3 bg-indigo-500 rounded-lg">Send</button>';
       document.getElementById('modal').classList.remove('hidden');
       document.getElementById('modal').classList.add('flex');
+    }
+
+    function sendMsg(name) {
+      closeModal();
+      showToast('✅', 'Message sent to ' + name);
+    }
+
+    function runJob(name) {
+      showToast('⚡', 'Running job: ' + name);
     }
 
     function closeModal() {
@@ -531,39 +310,41 @@
       document.getElementById('modal').classList.remove('flex');
     }
 
-    function executeAction(action) {
-      closeModal();
-      showToast('✅', `${action.replace(/([A-Z])/g, ' $1').trim()} started!`);
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      document.getElementById('toastMsg').textContent = msg;
+      t.classList.remove('translate-y-20','opacity-0');
+      setTimeout(() => t.classList.add('translate-y-20','opacity-0'), 3000);
     }
 
-    function runJob(name) {
-      showToast('⚡', `Running job: ${name}...`);
-      setTimeout(() => {
-        showToast('✅', `Job ${name} completed!`);
-      }, 2000);
+    function renderCalendar() {
+      const grid = document.getElementById('calGrid');
+      const y = month.getFullYear(), m = month.getMonth();
+      document.getElementById('calTitle').textContent = month.toLocaleString('default',{month:'long',year:'numeric'});
+      let first = new Date(y,m,1).getDay(), days = new Date(y,m+1,0).getDate();
+      let html = '';
+      for(let i=0;i<first;i++) html+='<div></div>';
+      for(let d=1;d<=days;d++) {
+        let date = y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+        let has = events.some(e=>e.date===date);
+        html += '<div onclick="selectDate(\''+date+'\')" class="p-2 text-center rounded-lg cursor-pointer hover:bg-slate-800 '+(has?'has-event':'')+'">'+d+'</div>';
+      }
+      grid.innerHTML = html;
     }
 
-    function toggleJob(name) {
-      showToast('🔄', `Toggled job: ${name}`);
+    function selectDate(date) {
+      quickAction('addEvent');
+      document.getElementById('eventDate').value = date;
+      showToast('📅', 'Selected: ' + date);
     }
 
-    function showToast(icon, message) {
-      const toast = document.getElementById('toast');
-      document.getElementById('toastIcon').textContent = icon;
-      document.getElementById('toastMessage').textContent = message;
-      toast.classList.remove('translate-y-20', 'opacity-0');
-      setTimeout(() => {
-        toast.classList.add('translate-y-20', 'opacity-0');
-      }, 3000);
-    }
+    function prevMonth() { month.setMonth(month.getMonth()-1); renderCalendar(); }
+    function nextMonth() { month.setMonth(month.getMonth()+1); renderCalendar(); }
 
-    function showAgent(name) {
-      showToast('🤖', `Agent ${name} details`);
-    }
-
-    function showSkill(name) {
-      showToast('💡', `Skill: ${name}`);
-    }
+    // Live updates
+    setInterval(() => {
+      document.getElementById('sessionCount').textContent = Math.floor(Math.random()*3)+4;
+    }, 5000);
   </script>
 </body>
 </html>
